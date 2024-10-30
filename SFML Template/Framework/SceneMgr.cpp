@@ -22,6 +22,10 @@ void SceneMgr::Release()
 {
 	for (auto scene : scenes)
 	{
+		if (currentScene == scene->getId())
+		{
+			scene->Exit();
+		}
 		scene->Release();
 		delete scene;
 	}
