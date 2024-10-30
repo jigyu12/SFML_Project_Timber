@@ -14,15 +14,18 @@ void Player::SetSide(Sides s)
 
 	if (side == Sides::Left)
 	{
-		SetScale({ -1.f, 1.f });
+		SetScale({ -1.f,1.f });
+		spriteFire.setScale({ -1.f,1.f });
 	}
 	else if (side == Sides::Right)
 	{
-		SetScale({ 1.f, 1.f });
+		SetScale({ 1.f,1.f });
+		spriteFire.setScale({ 1.f,1.f });
 	}
 
 	sf::Vector2f newPos = position + localPosPlayer[(int)s];
 	spritePlayer.setPosition(newPos);
+	spriteFire.setPosition(newPos);
 	spriteAxe.setPosition(newPos + localPosAxe);
 	spriteRip.setPosition(newPos + localRipAxe);
 }
@@ -61,6 +64,7 @@ void Player::SetOrigin(Origins preset)
 	if (preset != Origins::Custom)
 	{
 		origin = Utils::SetOrigin(spritePlayer, preset);
+		Utils::SetOrigin(spriteFire, preset);
 	}
 }
 
@@ -69,6 +73,7 @@ void Player::SetOrigin(const sf::Vector2f& newOrigin)
 	originPreset = Origins::Custom;
 	origin = newOrigin;
 	spritePlayer.setOrigin(origin);
+	spriteFire.setOrigin(origin);
 }
 
 void Player::Init()
@@ -81,6 +86,9 @@ void Player::Init()
 
 	spriteRip.setTexture(TEXTURE_MGR.Get(texIdRip));
 	Utils::SetOrigin(spriteRip, Origins::BC);
+
+	spriteFire.setTexture(TEXTURE_MGR.Get(texIdFire));
+	Utils::SetOrigin(spriteFire, Origins::BC);
 }
 
 void Player::Reset()
@@ -90,6 +98,7 @@ void Player::Reset()
 	spritePlayer.setTexture(TEXTURE_MGR.Get(texIdPlayer));
 	spriteAxe.setTexture(TEXTURE_MGR.Get(texIdAxe));
 	spriteRip.setTexture(TEXTURE_MGR.Get(texIdRip));
+	spriteFire.setTexture(TEXTURE_MGR.Get(texIdFire));
 
 	isAlive = true;
 	isChppoing = false;
@@ -109,6 +118,15 @@ void Player::Update(float dt)
 	if (!isAlive)
 		return;
 
+	appleTimer = Utils::Clamp(appleTimer - dt, 0.f, 4.f);
+
+	if (appleTimer <= 0.f)
+	{
+		SetPlayerTimeScale(1.f);
+	}
+
+	godMode = Utils::Clamp(godMode - dt, 0.f, 10.f);
+
 	if (InputMgr::GetKeyDown(sf::Keyboard::Left))
 	{
 		isChppoing = true;
@@ -127,7 +145,7 @@ void Player::Update(float dt)
 		isChppoing = true;
 		SetSide(Sides::Right);
 		sceneGame->OnChop(Sides::Right);
-		sceneGame->OnChop(Sides::Left);
+		sfxChop.play();
 	}
 
 	if (InputMgr::GetKeyUp(sf::Keyboard::Right))
@@ -140,6 +158,10 @@ void Player::Draw(sf::RenderWindow& window)
 {
 	if (isAlive)
 	{
+		if (godMode > 0.f)
+		{
+			window.draw(spriteFire);
+		}
 		window.draw(spritePlayer);
 		if (isChppoing)
 		{
@@ -155,4 +177,23 @@ void Player::Draw(sf::RenderWindow& window)
 void Player::SetSceneGame(SceneDev1* scene)
 {
 	sceneGame = scene;
+}
+
+void Player::SetGodMode(float godModeTime)
+{
+	godMode = Utils::Clamp(godMode + godModeTime, 0.f, 10.f);
+	if (side == Sides::Left)
+	{
+		SetScale({ -1.f , 1.f });
+	}
+	else if (side == Sides::Right)
+	{
+		SetScale({ 1.f,1.f });
+	}
+}
+
+void Player::SetPlayerTimeScale(float timeScale)
+{
+	this->timeScale = timeScale;
+	appleTimer = 4.f;
 }
