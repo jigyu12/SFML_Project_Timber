@@ -11,6 +11,9 @@ enum class SortingLayers
 enum class SceneIds
 {
 	None = -1,
+	MainTitle,
+	SelectGameMode,
+	SelectCharacter,
 	Dev1,
 	Dev2,
 	Count,

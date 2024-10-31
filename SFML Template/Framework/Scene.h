@@ -39,5 +39,7 @@ public:
 	void ApplyAddGo();
 	void ApplyRemoveGO();
 
+	const SceneIds& getId() { return id; }
+
 };
 
