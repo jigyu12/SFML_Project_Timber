@@ -7,14 +7,16 @@ class Tree : public GameObject
 {
 protected:
 	sf::Sprite tree;
+	sf::Sprite bee;
 	std::list<Branch*> leftBranches;
 	std::list<Branch*> rightBranches;
 
 	int branchCount = 6;
 	std::string treeTexId = "graphics/tree.png";
+	std::string beeTexId = "graphics/bee.png";
 	std::string branchTexId = "graphics/branch.png";
 
-	Branch::BranchStatus lastBranchStat = Branch::BranchStatus::Normal;
+	BranchStatus lastBranchStat = BranchStatus::Normal;
 
 	float brachOffsetY = 150.f;
 
@@ -42,6 +44,6 @@ public:
 
 	void ClearEffectLog();
 
-	Branch::BranchStatus GetLastBranchStatus() const;
+	BranchStatus GetLastBranchStatus() const;
 };
 

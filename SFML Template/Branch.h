@@ -3,16 +3,6 @@
 
 class Branch : public SpriteGo
 {
-public:
-	enum class BranchStatus
-	{
-		Normal,
-		Apple,
-		GoldenApple,
-		BeeHive,
-		BadApple,
-	};
-
 protected:
 	
 	Sides side = Sides::None;

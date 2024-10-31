@@ -8,6 +8,17 @@ Player::Player(PlayerSelect select, const std::string& name)
 {
 	sortingLayer = SortingLayers::Foreground;
 	sortingOrder = 0;
+
+	if (select == PlayerSelect::Player1)
+	{
+		LeftKey = sf::Keyboard::A;
+		RightKey = sf::Keyboard::D;
+	}
+	else
+	{
+		LeftKey = sf::Keyboard::Left;
+		RightKey = sf::Keyboard::Right;
+	}
 }
 
 void Player::SetSide(Sides s)
@@ -124,45 +135,49 @@ void Player::Update(float dt)
 	if (!isAlive)
 		return;
 
-	Player1Update(dt);
-	Player2Update(dt);
+	appleTimer = Utils::Clamp(appleTimer - dt, 0.f, 4.f);
+	godMode = Utils::Clamp(godMode - dt, 0.f, 10.f);
 
-//황규영 : 가지 기믹 부분
-//appleTimer = Utils::Clamp(appleTimer - dt, 0.f, 4.f);
-//
-//	if (appleTimer <= 0.f)
-//	{
-//		SetPlayerTimeScale(1.f);
-//	}
-//
-//	godMode = Utils::Clamp(godMode - dt, 0.f, 10.f);
-//
-//	if (InputMgr::GetKeyDown(sf::Keyboard::Left))
-//	{
-//		isChppoing = true;
-//		SetSide(Sides::Left);
-//		sceneGame->OnChop(Sides::Left);
-//		sfxChop.play();
-//	}
-//
-//	if (InputMgr::GetKeyUp(sf::Keyboard::Left))
-//	{
-//		isChppoing = false;
-//	}
-//
-//	if (InputMgr::GetKeyDown(sf::Keyboard::Right))
-//	{
-//		isChppoing = true;
-//		SetSide(Sides::Right);
-//		sceneGame->OnChop(Sides::Right);
-//		sfxChop.play();
-//	}
-//
-//	if (InputMgr::GetKeyUp(sf::Keyboard::Right))
-//	{
-//		isChppoing = false;
-//	}
+	if (appleTimer <= 0.f)
+	{
+		SetPlayerTimeScale(1.f);
+	}
 
+	if (InputMgr::GetKeyDown(LeftKey))
+	{
+		isChppoing = true;
+		SetSide(Sides::Left);
+
+		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
+			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Left);
+		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
+			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Left);
+
+		sfxChop.play();
+	}
+
+	if (InputMgr::GetKeyUp(LeftKey))
+	{
+		isChppoing = false;
+	}
+
+	if (InputMgr::GetKeyDown(RightKey))
+	{
+		isChppoing = true;
+		SetSide(Sides::Right);
+
+		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
+			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Right);
+		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
+			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Right);
+
+		sfxChop.play();
+	}
+
+	if (InputMgr::GetKeyUp(RightKey))
+	{
+		isChppoing = false;
+	}
 }
 
 void Player::Draw(sf::RenderWindow& window)
@@ -189,84 +204,10 @@ void Player::SetSceneGame(Scene* scene)
 {
 	sceneGame = scene;
 }
-void Player::Player1Update(float dt)
+
+void Player::Chopped(Sides side, BranchStatus branch)
 {
-	if (playerSelect != PlayerSelect::Player1)
-		return;
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::A))
-	{
-		isChppoing = true;
-		SetSide(Sides::Left);
-
-		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
-			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Left);
-		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
-			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Left);
-
-		sfxChop.play();
-	}
-
-	if (InputMgr::GetKeyUp(sf::Keyboard::A))
-	{
-		isChppoing = false;
-	}
-
-	if (InputMgr::GetKeyDown(sf::Keyboard::D))
-	{
-		isChppoing = true;
-		SetSide(Sides::Right);
-
-		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
-			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Right);
-		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
-			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Right);
-	}
-
-	if (InputMgr::GetKeyUp(sf::Keyboard::D))
-	{
-		isChppoing = false;
-	}
-}
-
-void Player::Player2Update(float dt)
-{
-	if (playerSelect != PlayerSelect::Player2)
-		return;
-
-	if (InputMgr::GetKeyDown(sf::Keyboard::Left))
-	{
-		isChppoing = true;
-		SetSide(Sides::Left);
-
-		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
-			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Left);
-		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
-			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Left);
-
-		sfxChop.play();
-	}
-
-	if (InputMgr::GetKeyUp(sf::Keyboard::Left))
-	{
-		isChppoing = false;
-	}
-
-	if (InputMgr::GetKeyDown(sf::Keyboard::Right))
-	{
-		isChppoing = true;
-		SetSide(Sides::Right);
-
-		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
-			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Right);
-		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
-			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Right);
-	}
-
-	if (InputMgr::GetKeyUp(sf::Keyboard::Right))
-	{
-		isChppoing = false;
-	}
 }
 
 void Player::SetGodMode(float godModeTime)
@@ -286,4 +227,9 @@ void Player::SetPlayerTimeScale(float timeScale)
 {
 	this->timeScale = timeScale;
 	appleTimer = 4.f;
+}
+
+void Player::AddLife(float iLife)
+{
+	life = Utils::Clamp(life + iLife, 0.f, 5.f);
 }

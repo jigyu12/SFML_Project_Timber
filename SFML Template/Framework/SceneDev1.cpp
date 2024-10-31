@@ -169,6 +169,12 @@ void SceneDev1::SetScore(int score)
 	uiScore->SetScore(this->score);
 }
 
+void SceneDev1::AddScore(int score)
+{
+	this->score += score;
+	uiScore->SetScore(this->score);
+}
+
 void SceneDev1::SetStatus(Status newStatus)
 {
 	Status prevStatus = currentStatus;
@@ -235,8 +241,6 @@ void SceneDev1::UpdateGame(float dt)
 		sfxTimeOut.play();
 
 		player->OnDie();
-		SetCenterMessage("Time Over!");
-		SetStatus(Status::GameOver);
 		return;
 	}
 }
@@ -260,19 +264,19 @@ void SceneDev1::UpdatePause(float dt)
 void SceneDev1::OnChop(Sides side)
 {
 	Sides branchSide = tree->Chop(side);
+	BranchStatus branchStat = tree->GetLastBranchStatus();
+	player->Chopped(branchSide, branchStat);
+
 	if (player->GetSide() == branchSide)
 	{
-		Branch::BranchStatus currentBranch = tree->GetLastBranchStatus();
+		BranchStatus currentBranch = tree->GetLastBranchStatus();
 		switch (tree->GetLastBranchStatus())
 		{
-		case Branch::BranchStatus::Normal:
+		case BranchStatus::Normal:
 			if (player->GetGodMode() <= 0.f)
 			{
 				sfxDeath.play();
-
 				player->OnDie();
-				SetCenterMessage("You Die!");
-				SetStatus(Status::GameOver);
 			}
 			else
 			{
@@ -280,13 +284,13 @@ void SceneDev1::OnChop(Sides side)
 				timer += 0.5f;
 			}
 			break;
-		case Branch::BranchStatus::Apple:
+		case BranchStatus::Apple:
 			FRAMEWORK.SetTimeScale(0.5f);
 			break;
-		case Branch::BranchStatus::GoldenApple:
+		case BranchStatus::GoldenApple:
 			player->SetGodMode(2.f);
 			break;
-		case Branch::BranchStatus::BeeHive:
+		case BranchStatus::BeeHive:
 			break;
 		}
 	}
@@ -295,4 +299,19 @@ void SceneDev1::OnChop(Sides side)
 		SetScore(score + 100);
 		timer += 1.f;
 	}
+}
+
+void SceneDev1::OnDie(bool isTimeOver)
+{
+	if (isTimeOver)
+	{
+		SetCenterMessage("Time Over!");
+		SetStatus(Status::GameOver);
+		sfxDeath.play();
+		return;
+	}
+	
+	SetCenterMessage("You Die!");
+	SetStatus(Status::GameOver);
+	sfxTimeOut.play();
 }

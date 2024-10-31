@@ -27,13 +27,13 @@ void Branch::Draw(sf::RenderWindow& window)
 {
 	switch (eStatus)
 	{
-	case Branch::BranchStatus::Apple:
+	case BranchStatus::Apple:
 		spgApple->Draw(window);
 		break;
-	case Branch::BranchStatus::GoldenApple:
+	case BranchStatus::GoldenApple:
 		spgGoldenApple->Draw(window);
 		break;
-	case Branch::BranchStatus::BeeHive:
+	case BranchStatus::BeeHive:
 		spgBeehive->Draw(window);
 		break;
 	default:
@@ -109,7 +109,7 @@ void Branch::RandStatus()
 	active = true;
 }
 
-Branch::BranchStatus Branch::GetStatus() const
+BranchStatus Branch::GetStatus() const
 {
 	return eStatus;
 }

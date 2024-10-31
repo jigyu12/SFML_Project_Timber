@@ -54,6 +54,7 @@ public:
 	void SetVisibleCenterMessage(bool visible);
 
 	void SetScore(int score);
+	void AddScore(int score);
 
 	void SetStatus(Status newStatus);
 	void UpdateAwake(float dt);
@@ -62,6 +63,7 @@ public:
 	void UpdatePause(float dt);
 
 	void OnChop(Sides side);
+	void OnDie(bool isTimeOver);
 
 };
 

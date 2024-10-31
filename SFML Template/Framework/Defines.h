@@ -36,6 +36,15 @@ enum class Sides
 	None,
 };
 
+enum class BranchStatus
+{
+	Normal,
+	Apple,
+	GoldenApple,
+	BeeHive,
+	BadApple,
+};
+
 enum class PlayerSelect
 {
 	Player1,

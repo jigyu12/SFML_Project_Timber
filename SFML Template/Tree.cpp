@@ -80,10 +80,8 @@ void Tree::Reset()
 		(*rightbranch)->Reset();
 		(*rightbranch)->RandStatus();
 
-		if (((*leftbranch)->GetStatus() == Branch::BranchStatus::Normal
-			&& (*rightbranch)->GetStatus() == Branch::BranchStatus::Normal)
-			||((*leftbranch)->GetStatus() == Branch::BranchStatus::BeeHive
-				&& (*rightbranch)->GetStatus() == Branch::BranchStatus::BeeHive))
+		if (((*leftbranch)->GetStatus() == BranchStatus::Normal || (*leftbranch)->GetStatus() == BranchStatus::BeeHive)
+			&& (((*rightbranch)->GetStatus() == BranchStatus::Normal) || (*rightbranch)->GetStatus() == BranchStatus::BeeHive))
 		{
 			Utils::RandomRange(0, 1) == 0 ? (*leftbranch)->SetActive(false) : (*rightbranch)->SetActive(false);
 		}
@@ -163,9 +161,14 @@ void Tree::ClearEffectLog()
 	logEffects.clear();
 }
 
-Branch::BranchStatus Tree::GetLastBranchStatus() const
+BranchStatus Tree::GetLastBranchStatus() const
 {
 	return lastBranchStat;
+}
+
+Sides Tree::RandomSide() const
+{
+	return Sides();
 }
 
 Sides Tree::Chop(Sides side)
@@ -190,10 +193,8 @@ Sides Tree::Chop(Sides side)
 	rightBranches.pop_front();
 	rightTemp->RandStatus();
 	rightBranches.push_back(rightTemp);
-	if ((leftTemp->GetStatus() == Branch::BranchStatus::Normal
-		&& rightTemp->GetStatus() == Branch::BranchStatus::Normal)
-		|| (leftTemp->GetStatus() == Branch::BranchStatus::BeeHive
-			&& rightTemp->GetStatus() == Branch::BranchStatus::BeeHive))
+	if ((leftTemp->GetStatus() == BranchStatus::Normal || leftTemp->GetStatus() == BranchStatus::BeeHive)
+		&& (rightTemp->GetStatus() == BranchStatus::Normal || rightTemp->GetStatus() == BranchStatus::BeeHive))
 	{
 		Utils::RandomRange(0, 1) == 0 ? leftTemp->SetActive(false) : rightTemp->SetActive(false);
 	}

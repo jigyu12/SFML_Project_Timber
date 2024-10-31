@@ -19,6 +19,7 @@ protected:
 	std::string sbIdChop = "sound/chop.wav";
 	std::string texIdFire = "graphics/fire.png";
 	std::string texIdPlayer = "graphics/player.png";
+	std::string texIdPlayer2 = "graphics/player2.png";
 	std::string texIdAxe = "graphics/axe.png";
 	std::string texIdRip = "graphics/rip.png";
 
@@ -35,6 +36,10 @@ protected:
 	float godMode = 0.f;
 	float timeScale = 1.f;
 	float appleTimer = 0.f;
+	float life = 0.f;
+
+	sf::Keyboard::Key LeftKey;
+	sf::Keyboard::Key RightKey;
 
 	Scene* sceneGame = nullptr;
 
@@ -60,13 +65,15 @@ public:
 
 	void SetSceneGame(Scene* scene);
 
-	void Player1Update(float dt);
-	void Player2Update(float dt);
+	void Chopped(Sides side, BranchStatus branch);
 
 	float GetGodMode() const { return godMode; }
 	void SetGodMode(float time);
 	
 	float GetPlayerTimeScale() const { return timeScale; }
 	void SetPlayerTimeScale(float timescale);
+
+	float GetLife() const { return life; }
+	void AddLife(float iLife);
 };
 
