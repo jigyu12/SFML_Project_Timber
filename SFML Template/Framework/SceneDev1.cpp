@@ -36,8 +36,7 @@ void SceneDev1::Init()
 	TEXTURE_MGR.Load("graphics/axe.png");
 
 	tree = AddGo(new Tree("Tree"));
-	player = AddGo(new Player("Player"));
-
+	player = AddGo(new Player(PlayerSelect::Player1, "Player"));
 
 	centerMsg = AddGo(new TextGo("fonts/KOMIKAP_.ttf", "Center Message"));
 	centerMsg->sortingLayer = SortingLayers::UI;
@@ -65,6 +64,8 @@ void SceneDev1::Init()
 
 void SceneDev1::Enter()
 {
+	std::cout << "SceneDev1::Enter()" << std::endl;
+
 	TEXTURE_MGR.Load("graphics/background.png");
 	TEXTURE_MGR.Load("graphics/cloud.png");
 	TEXTURE_MGR.Load("graphics/tree.png");
