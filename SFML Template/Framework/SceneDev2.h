@@ -24,6 +24,10 @@ protected:
 	Tree* tree;
 	Player* player1;
 	Player* player2;
+	Player* player1_1;
+	Player* player2_1;
+	Player* player1_2;
+	Player* player2_2;
 
 	TextGo* centerMsg;
 	UiScore* uiScore;

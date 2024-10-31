@@ -19,6 +19,7 @@ protected:
 	std::string sbIdChop = "sound/chop.wav";
 	std::string texIdFire = "graphics/fire.png";
 	std::string texIdPlayer = "graphics/player.png";
+	std::string texIdPlayer2 = "graphics/player2.png";
 	std::string texIdAxe = "graphics/axe.png";
 	std::string texIdRip = "graphics/rip.png";
 

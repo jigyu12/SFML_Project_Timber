@@ -17,9 +17,6 @@ public:
 	SelectCharacter();
 	~SelectCharacter() = default;
 
-	static std::string player1Select;
-	static std::string player2Select;
-	
 
 	void Init() override;
 	void Enter() override;

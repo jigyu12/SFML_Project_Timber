@@ -32,12 +32,17 @@ void SceneDev2::Init()
 	TEXTURE_MGR.Load("graphics/tree.png");
 	TEXTURE_MGR.Load("graphics/branch.png");
 	TEXTURE_MGR.Load("graphics/player.png");
+	TEXTURE_MGR.Load("graphics/player2.png");
 	TEXTURE_MGR.Load("graphics/rip.png");
 	TEXTURE_MGR.Load("graphics/axe.png");
 
 	tree = AddGo(new Tree("Tree"));
-	player1 = AddGo(new Player(PlayerSelect::Player1, "Player1"));
-	player2 = AddGo(new Player(PlayerSelect::Player2, "Player2"));
+
+	player1_1 = AddGo(new Player(PlayerSelect::Player1, "Player1"));
+	player2_1 = AddGo(new Player(PlayerSelect::Player2, "Player2"));
+	player1_2 = AddGo(new Player(PlayerSelect::Player2, "Player1"));
+	player2_2 = AddGo(new Player(PlayerSelect::Player1, "Player2"));
+
 
 	centerMsg = AddGo(new TextGo("fonts/KOMIKAP_.ttf", "Center Message"));
 	centerMsg->sortingLayer = SortingLayers::UI;
@@ -48,8 +53,14 @@ void SceneDev2::Init()
 	Scene::Init();
 
 	tree->SetPosition({ 1920.f / 2, 1080.f - 200.f });
-	player1->SetPosition({ 1920.f / 2, 1080.f - 200.f });
-	player2->SetPosition({ 1920.f / 2, 1080.f - 200.f });
+	player1_1->SetPosition({ 1920.f / 2, 1080.f - 200.f });
+	player2_1->SetPosition({ 1920.f / 2, 1080.f - 200.f });
+	player1_2->SetPosition({ 1920.f / 2, 1080.f - 200.f });
+	player2_2->SetPosition({ 1920.f / 2, 1080.f - 200.f });
+	player1_1->SetActive(false);
+	player2_1->SetActive(false);
+	player1_2->SetActive(false);
+	player2_2->SetActive(false);
 
 	centerMsg->text.setCharacterSize(100);
 	centerMsg->text.setFillColor(sf::Color::White);
@@ -74,13 +85,28 @@ void SceneDev2::Enter()
 	TEXTURE_MGR.Load("graphics/branch.png");
 	TEXTURE_MGR.Load("graphics/log.png");
 	TEXTURE_MGR.Load("graphics/player.png");
+	TEXTURE_MGR.Load("graphics/player2.png");
 	TEXTURE_MGR.Load("graphics/rip.png");
 	TEXTURE_MGR.Load("graphics/axe.png");
 	FONT_MGR.Load("fonts/KOMIKAP_.ttf");
 	SOUNDBUFFER_MGR.Load("sound/chop.wav");
 	SOUNDBUFFER_MGR.Load(sbIdDeath);
 	SOUNDBUFFER_MGR.Load(sbIdTimeOut);
-
+	if (SCENE_MGR.player1Select == 1)
+	{
+		player1_1->SetActive(true);
+		player2_1->SetActive(true);
+		player1 = player1_1;
+		player2 = player2_1;
+		
+	}
+	if (SCENE_MGR.player1Select == 2)
+	{
+		player1_2->SetActive(true);
+		player2_2->SetActive(true);
+		player1 = player1_2;
+		player2 = player2_2;
+	}
 	sfxDeath.setBuffer(SOUNDBUFFER_MGR.Get(sbIdDeath));
 	sfxTimeOut.setBuffer(SOUNDBUFFER_MGR.Get(sbIdTimeOut));
 
@@ -108,6 +134,7 @@ void SceneDev2::Exit()
 	TEXTURE_MGR.Unload("graphics/branch.png");
 	TEXTURE_MGR.Unload("graphics/log.png");
 	TEXTURE_MGR.Unload("graphics/player.png");
+	TEXTURE_MGR.Unload("graphics/player2.png");
 	TEXTURE_MGR.Unload("graphics/rip.png");
 	TEXTURE_MGR.Unload("graphics/axe.png");
 	FONT_MGR.Unload("fonts/KOMIKAP_.ttf");

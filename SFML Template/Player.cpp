@@ -80,7 +80,14 @@ void Player::SetOrigin(const sf::Vector2f& newOrigin)
 
 void Player::Init()
 {
-	spritePlayer.setTexture(TEXTURE_MGR.Get(texIdPlayer));
+	if (playerSelect == PlayerSelect::Player1)
+	{
+		spritePlayer.setTexture(TEXTURE_MGR.Get(texIdPlayer));
+	}
+	if (playerSelect == PlayerSelect::Player2)
+	{
+		spritePlayer.setTexture(TEXTURE_MGR.Get(texIdPlayer2));
+	}
 	SetOrigin(Origins::BC);
 
 	spriteAxe.setTexture(TEXTURE_MGR.Get(texIdAxe));
@@ -107,7 +114,7 @@ void Player::Reset()
 	SetPosition(position);
 	SetScale({ 1.f, 1.f });
 
-	if(playerSelect == PlayerSelect::Player1)
+	if (playerSelect == PlayerSelect::Player1)
 		SetSide(Sides::Right);
 	else if (playerSelect == PlayerSelect::Player2)
 		SetSide(Sides::Left);
@@ -127,41 +134,41 @@ void Player::Update(float dt)
 	Player1Update(dt);
 	Player2Update(dt);
 
-//황규영 : 가지 기믹 부분
-//appleTimer = Utils::Clamp(appleTimer - dt, 0.f, 4.f);
-//
-//	if (appleTimer <= 0.f)
-//	{
-//		SetPlayerTimeScale(1.f);
-//	}
-//
-//	godMode = Utils::Clamp(godMode - dt, 0.f, 10.f);
-//
-//	if (InputMgr::GetKeyDown(sf::Keyboard::Left))
-//	{
-//		isChppoing = true;
-//		SetSide(Sides::Left);
-//		sceneGame->OnChop(Sides::Left);
-//		sfxChop.play();
-//	}
-//
-//	if (InputMgr::GetKeyUp(sf::Keyboard::Left))
-//	{
-//		isChppoing = false;
-//	}
-//
-//	if (InputMgr::GetKeyDown(sf::Keyboard::Right))
-//	{
-//		isChppoing = true;
-//		SetSide(Sides::Right);
-//		sceneGame->OnChop(Sides::Right);
-//		sfxChop.play();
-//	}
-//
-//	if (InputMgr::GetKeyUp(sf::Keyboard::Right))
-//	{
-//		isChppoing = false;
-//	}
+	//황규영 : 가지 기믹 부분
+	//appleTimer = Utils::Clamp(appleTimer - dt, 0.f, 4.f);
+	//
+	//	if (appleTimer <= 0.f)
+	//	{
+	//		SetPlayerTimeScale(1.f);
+	//	}
+	//
+	//	godMode = Utils::Clamp(godMode - dt, 0.f, 10.f);
+	//
+	//	if (InputMgr::GetKeyDown(sf::Keyboard::Left))
+	//	{
+	//		isChppoing = true;
+	//		SetSide(Sides::Left);
+	//		sceneGame->OnChop(Sides::Left);
+	//		sfxChop.play();
+	//	}
+	//
+	//	if (InputMgr::GetKeyUp(sf::Keyboard::Left))
+	//	{
+	//		isChppoing = false;
+	//	}
+	//
+	//	if (InputMgr::GetKeyDown(sf::Keyboard::Right))
+	//	{
+	//		isChppoing = true;
+	//		SetSide(Sides::Right);
+	//		sceneGame->OnChop(Sides::Right);
+	//		sfxChop.play();
+	//	}
+	//
+	//	if (InputMgr::GetKeyUp(sf::Keyboard::Right))
+	//	{
+	//		isChppoing = false;
+	//	}
 
 }
 
