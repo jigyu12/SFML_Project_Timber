@@ -8,6 +8,8 @@ class Player : public GameObject
 {
 protected:
 	sf::Sound sfxChop;
+	sf::Sound sfxEat;
+	sf::Sound sfxStar;
 
 	PlayerSelect playerSelect = PlayerSelect::None;
 
@@ -17,6 +19,8 @@ protected:
 	sf::Sprite spriteFire;
 
 	std::string sbIdChop = "sound/chop.wav";
+	std::string sbIdEat = "sound/eat.mp3";
+	std::string sbIdStar = "sound/star.mp3";
 	std::string texIdFire = "graphics/fire.png";
 	std::string texIdPlayer = "graphics/player.png";
 	std::string texIdPlayer2 = "graphics/player2.png";
@@ -70,7 +74,7 @@ public:
 	void SetGodMode(float time);
 	
 	float GetPlayerTimeScale() const { return timeScale; }
-	void SetPlayerTimeScale(float timescale);
+	void SetApple(float timescale);
 
 	float GetLife() const { return life; }
 	void AddLife(float iLife);

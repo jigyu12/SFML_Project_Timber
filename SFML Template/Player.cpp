@@ -99,6 +99,8 @@ void Player::Init()
 void Player::Reset()
 {
 	sfxChop.setBuffer(SOUNDBUFFER_MGR.Get(sbIdChop));
+	sfxEat.setBuffer(SOUNDBUFFER_MGR.Get(sbIdEat));
+	sfxStar.setBuffer(SOUNDBUFFER_MGR.Get(sbIdStar));
 
 	spritePlayer.setTexture(TEXTURE_MGR.Get(texIdPlayer));
 	spriteAxe.setTexture(TEXTURE_MGR.Get(texIdAxe));
@@ -107,6 +109,7 @@ void Player::Reset()
 
 	isAlive = true;
 	isChppoing = false;
+	life = 5.f;
 	SetPosition(position);
 	SetScale({ 1.f, 1.f });
 }
@@ -124,11 +127,23 @@ void Player::Update(float dt)
 
 	appleTimer = Utils::Clamp(appleTimer - dt, 0.f, 4.f);
 	godMode = Utils::Clamp(godMode - dt, 0.f, 10.f);
+	if (godMode <= 0.f)
+	{
+		sfxStar.stop();
+	}
 
 	if (appleTimer <= 0.f)
 	{
-		SetPlayerTimeScale(1.f);
+		SetApple(1.f);
 	}
+	if (life <= 0.f)
+	{
+		//황규영 ToDo - 2플레이어 로직 추가해야함
+		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
+			dynamic_cast<SceneDev1*>(sceneGame)->OnDie(true);
+	}
+
+	AddLife(-dt * timeScale);
 
 	if (InputMgr::GetKeyDown(LeftKey))
 	{
@@ -205,7 +220,48 @@ void Player::SetSceneGame(Scene* scene)
 
 void Player::Chopped(Sides side, BranchStatus branch)
 {
-
+	if (this->side == side)
+	{
+		switch (branch)
+		{
+		case BranchStatus::Normal:
+			if (godMode <= 0.f)
+			{
+				if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
+					dynamic_cast<SceneDev1*>(sceneGame)->OnDie(false);
+				//황규영 Todo - 2플레이어 로직 추가해야함
+				//else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
+				//	dynamic_cast<SceneDev2*>(sceneGame)->OnDie(false);
+			}
+			else
+			{
+				if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
+					dynamic_cast<SceneDev1*>(sceneGame)->AddScore(50);
+				//황규영 Todo - 2플레이어 로직 추가해야함
+				AddLife(0.5f);
+			}
+			break;
+		case BranchStatus::Apple:
+			sfxEat.play();
+			SetApple(0.5f);
+			break;
+		case BranchStatus::GoldenApple:
+			sfxStar.play();
+			SetGodMode(2.f);
+			break;
+		case BranchStatus::BeeHive:
+			if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
+				dynamic_cast<SceneDev1*>(sceneGame)->OnBeehive(side);
+			break;
+		}
+	}
+	else
+	{
+		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
+			dynamic_cast<SceneDev1*>(sceneGame)->AddScore(100);
+		//황규영 Todo - 2플레이어 로직 추가해야함
+		AddLife(1.f);
+	}
 }
 
 void Player::SetGodMode(float godModeTime)
@@ -221,7 +277,7 @@ void Player::SetGodMode(float godModeTime)
 	}
 }
 
-void Player::SetPlayerTimeScale(float timeScale)
+void Player::SetApple(float timeScale)
 {
 	this->timeScale = timeScale;
 	appleTimer = 4.f;
