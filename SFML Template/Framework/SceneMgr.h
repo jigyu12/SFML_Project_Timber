@@ -9,8 +9,10 @@ class SceneMgr : public Singleton<SceneMgr>
 protected:
 	std::vector<Scene*> scenes;
 
-	SceneIds startScene = SceneIds::Dev1;
+	SceneIds startScene = SceneIds::MainTitle;
 	SceneIds currentScene;
+
+	SceneIds gameMode = SceneIds::None;
 
 	SceneIds nextScene = SceneIds::None;
 
@@ -35,6 +37,9 @@ public:
 	void LateUpdate(float dt);
 
 	void Draw(sf::RenderWindow& window);
+
+	void SetGameMode(const SceneIds& mode) { gameMode = mode; }
+	SceneIds GetGameMode() const { return gameMode; }
 };
 
 
