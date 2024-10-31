@@ -92,6 +92,7 @@ void SceneDev2::Enter()
 	TEXTURE_MGR.Load("graphics/tree.png");
 	TEXTURE_MGR.Load("graphics/branch.png");
 	TEXTURE_MGR.Load("graphics/log.png");
+	TEXTURE_MGR.Load("graphics/fire.png");
 	TEXTURE_MGR.Load("graphics/player.png");
 	TEXTURE_MGR.Load("graphics/player2.png");
 	TEXTURE_MGR.Load("graphics/rip.png");
