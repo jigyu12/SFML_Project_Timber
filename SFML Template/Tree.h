@@ -29,6 +29,7 @@ public:
 
 	Sides RandomSide() const;
 	Sides Chop(Sides side);
+	void ToBee();
 
 	void UpdateBranchPos();
 

@@ -35,7 +35,8 @@ protected:
 	sf::Sound sfxDeath;
 	sf::Sound sfxTimeOut;
 
-	std::string sbIdDeath = "sound/death.wav";
+	std::string sbIdDeath = "sound/death2.wav";
+	//std::string sbIdDeath = "sound/death.wav";
 	std::string sbIdTimeOut = "sound/out_of_time.wav";
 
 public:
@@ -64,6 +65,7 @@ public:
 
 	void OnChop(Sides side);
 	void OnDie(bool isTimeOver);
+	void OnBeehive(Sides side);
 
 };
 
