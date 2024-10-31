@@ -6,14 +6,13 @@
 class Tree : public GameObject
 {
 protected:
+	sf::Sound sfxBee;
 	sf::Sprite tree;
-	sf::Sprite bee;
 	std::list<Branch*> leftBranches;
 	std::list<Branch*> rightBranches;
 
 	int branchCount = 6;
 	std::string treeTexId = "graphics/tree.png";
-	std::string beeTexId = "graphics/bee.png";
 	std::string branchTexId = "graphics/branch.png";
 
 	BranchStatus lastBranchStat = BranchStatus::Normal;
@@ -29,7 +28,6 @@ public:
 
 	Sides RandomSide() const;
 	Sides Chop(Sides side);
-	void ToBee();
 
 	void UpdateBranchPos();
 

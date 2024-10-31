@@ -252,6 +252,8 @@ void Player::Chopped(Sides side, BranchStatus branch)
 			SetGodMode(2.f);
 			break;
 		case BranchStatus::BeeHive:
+			if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
+				dynamic_cast<SceneDev1*>(sceneGame)->OnBeehive(side);
 			break;
 		}
 	}

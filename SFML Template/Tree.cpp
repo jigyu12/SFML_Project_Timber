@@ -69,7 +69,6 @@ void Tree::Release()
 void Tree::Reset()
 {
 	tree.setTexture(TEXTURE_MGR.Get(treeTexId), true);
-	bee.setTexture(TEXTURE_MGR.Get(beeTexId), true);
 
 	auto leftbranch = leftBranches.begin();
 	auto rightbranch = rightBranches.begin();
@@ -214,11 +213,6 @@ Sides Tree::Chop(Sides side)
 		sides = rightTemp->IsActive() ? Sides::Right : Sides::Left;
 	}
 	return sides;
-}
-
-void Tree::ToBee(Sides side)
-{
-	sf::Vector2f pos;
 }
 
 void Tree::UpdateBranchPos()

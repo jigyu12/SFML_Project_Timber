@@ -28,6 +28,7 @@ void SceneDev1::Init()
 		cloud->sortingLayer = SortingLayers::Background;
 		cloud->sortingOrder = 0;
 	}
+	bee = AddGo(new SpriteGo("graphics/bee.png", "bee"));
 
 	TEXTURE_MGR.Load("graphics/apple.png");
 	TEXTURE_MGR.Load("graphics/goldenapple.png");
@@ -79,6 +80,7 @@ void SceneDev1::Enter()
 	TEXTURE_MGR.Load("graphics/fire.png");
 	TEXTURE_MGR.Load("graphics/player.png");
 	TEXTURE_MGR.Load("graphics/rip.png");
+	TEXTURE_MGR.Load("graphics/bee.png");
 	TEXTURE_MGR.Load("graphics/axe.png");
 	FONT_MGR.Load("fonts/KOMIKAP_.ttf");
 	SOUNDBUFFER_MGR.Load("sound/chop.wav");
@@ -90,6 +92,10 @@ void SceneDev1::Enter()
 
 	sfxDeath.setBuffer(SOUNDBUFFER_MGR.Get(sbIdDeath));
 	sfxTimeOut.setBuffer(SOUNDBUFFER_MGR.Get(sbIdTimeOut));
+	sfxBee.setBuffer(SOUNDBUFFER_MGR.Get(sbIdBee));
+	bee->SetOrigin(Origins::MC);
+	bee->sortingLayer = SortingLayers::Foreground;
+	bee->sortingOrder = 10;
 
 	player->SetSceneGame(this);
 
@@ -242,6 +248,13 @@ void SceneDev1::UpdateGame(float dt)
 
 	timer = player->GetLife();
 	uiTimer->SetValue(timer / gameTime);
+
+
+	bee->SetScale(bee->GetScale() * (1.f + dt * 3.f));
+	if (bee->GetScale().x > 30.f)
+	{
+		bee->SetActive(false);
+	}
 }
 
 void SceneDev1::UpdateGameOver(float dt)
@@ -285,5 +298,19 @@ void SceneDev1::OnDie(bool isTimeOver)
 
 void SceneDev1::OnBeehive(Sides side)
 {
-	tree->ToBee(side);
+	sf::Vector2f pos = tree->GetPosition();
+	if (side == Sides::Left)
+	{
+		//pos += rightBranches.front()->GetOrigin();
+		pos += {-290.f, -130.f};
+	}
+	else
+	{
+		//pos -= rightBranches.front()->GetOrigin();
+		pos += {290.f, -130.f};
+	}
+	bee->SetPosition(pos);
+	bee->SetScale({ 0.05f,0.05f });
+	bee->SetActive(true);
+	sfxBee.play();
 }
