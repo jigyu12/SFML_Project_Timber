@@ -49,14 +49,6 @@ void Player::SetPosition(const sf::Vector2f& pos)
 	SetSide(side);
 }
 
-void Player::OnDie()
-{
-	isAlive = false;
-	isChppoing = false;
-
-
-}
-
 void Player::SetScale(const sf::Vector2f& scale)
 {
 	this->scale = scale;
@@ -151,6 +143,7 @@ void Player::Update(float dt)
 	}
 	if (life <= 0.f)
 	{
+		isAlive = false;
 		//황규영 ToDo - 2플레이어 로직 추가해야함
 		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 			dynamic_cast<SceneDev1*>(sceneGame)->OnDie(true);
@@ -229,6 +222,7 @@ void Player::Chopped(Sides side, BranchStatus branch)
 		case BranchStatus::Normal:
 			if (godMode <= 0.f)
 			{
+				isAlive = false;
 				if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 					dynamic_cast<SceneDev1*>(sceneGame)->OnDie(false);
 				//황규영 Todo - 2플레이어 로직 추가해야함

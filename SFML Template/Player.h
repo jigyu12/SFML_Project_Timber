@@ -53,7 +53,6 @@ public:
 
 	Sides GetSide() const { return side; }
 	void SetSide(Sides s);
-	void OnDie();
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetScale(const sf::Vector2f& scale) override;
