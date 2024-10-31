@@ -14,14 +14,14 @@ void PraticePage::Init()
 	player1 = AddGo(new SpriteGo("graphics/player.png"));
 	player2 = AddGo(new SpriteGo("graphics/player2.png"));
 	arrow = AddGo(new SpriteGo("graphics/arrow.png"));
-	
+
 
 	Scene::Init();
 	Message->text.setCharacterSize(150);
 	SetMessage("Select Player");
 	Message->SetPosition({ 1920.f / 2 ,1080.f / 3 });
 
-	
+
 
 	player1->SetPosition(player1pos);
 	player1->SetOrigin(Origins::MC);
@@ -32,12 +32,12 @@ void PraticePage::Init()
 	arrow->SetScale({ 0.05f,0.05f });
 	arrow->SetPosition(player1pos - arrowXoffset);
 	arrow->SetOrigin(Origins::MC);
-	
+
 }
 
 void PraticePage::Enter()
 {
-	
+
 	TEXTURE_MGR.Load("graphics/arrow.png");
 	TEXTURE_MGR.Load("graphics/player.png");
 	TEXTURE_MGR.Load("graphics/player2.png");
@@ -48,7 +48,7 @@ void PraticePage::Enter()
 void PraticePage::Exit()
 {
 	Scene::Exit();
-	
+
 	TEXTURE_MGR.Unload("graphics/arrow.png");
 	TEXTURE_MGR.Unload("graphics/player.png");
 	TEXTURE_MGR.Unload("graphics/player2.png");
@@ -94,31 +94,15 @@ void PraticePage::Update(float dt)
 	{
 		if (Getarrowside() == Sides::Left)
 		{
-			if (SCENE_MGR.GetGameMode() == SceneIds::Dev1)
-			{
-				
-				SCENE_MGR.ChangeScene(SCENE_MGR.GetGameMode());
-			}
-			else if (SCENE_MGR.GetGameMode() == SceneIds::Dev2)
-			{
-
-				SCENE_MGR.ChangeScene(SCENE_MGR.GetGameMode());
-			}
+			SCENE_MGR.player1sprite = PlayerSelect::Player1;
+			SCENE_MGR.ChangeScene(SCENE_MGR.GetGameMode());
 		}
 		else if (Getarrowside() == Sides::Right)
 		{
-			if (SCENE_MGR.GetGameMode() == SceneIds::Dev1)
-			{
-				
-				SCENE_MGR.ChangeScene(SCENE_MGR.GetGameMode());
-			}
-			else if (SCENE_MGR.GetGameMode() == SceneIds::Dev2)
-			{
-
-				SCENE_MGR.ChangeScene(SCENE_MGR.GetGameMode());
-			}
+			SCENE_MGR.player1sprite = PlayerSelect::Player2;
+			SCENE_MGR.ChangeScene(SCENE_MGR.GetGameMode());
 		}
-		
+
 	}
 }
 

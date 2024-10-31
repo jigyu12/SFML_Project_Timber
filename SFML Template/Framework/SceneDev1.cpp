@@ -43,8 +43,7 @@ void SceneDev1::Init()
 
 	tree = AddGo(new Tree("Tree"));
 	
-	player = AddGo(new Player(PlayerSelect::Player1, "Player"));
-
+	player = AddGo(new Player(PlayerSelect::Player1, "Player1"));
 
 	centerMsg = AddGo(new TextGo("fonts/KOMIKAP_.ttf", "Center Message"));
 	centerMsg->sortingLayer = SortingLayers::UI;
@@ -92,6 +91,11 @@ void SceneDev1::Enter()
 
 	sfxDeath.setBuffer(SOUNDBUFFER_MGR.Get(sbIdDeath));
 	sfxTimeOut.setBuffer(SOUNDBUFFER_MGR.Get(sbIdTimeOut));
+
+	if (SCENE_MGR.player1sprite == PlayerSelect::Player2)
+	{
+		player->SetTexture("graphics/player2.png");
+	}
 
 	player->SetActive(true);
 	player->SetSceneGame(this);

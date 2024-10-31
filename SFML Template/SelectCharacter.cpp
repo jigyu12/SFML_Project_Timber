@@ -54,14 +54,14 @@ void SelectCharacter::Update(float dt)
 {
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
 	{
-		SCENE_MGR.player1Select = 1;
-		SCENE_MGR.player2Select = 2;
+		SCENE_MGR.player1sprite = PlayerSelect::Player1;
+
 		SCENE_MGR.ChangeScene(SCENE_MGR.GetGameMode());
 	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
 	{
-		SCENE_MGR.player1Select = 2;
-		SCENE_MGR.player2Select = 1;
+		SCENE_MGR.player1sprite = PlayerSelect::Player2;
+
 		SCENE_MGR.ChangeScene(SCENE_MGR.GetGameMode());
 	}
 }

@@ -10,6 +10,12 @@ Player::Player(PlayerSelect select, const std::string& name)
 	sortingOrder = 0;
 }
 
+void Player::SetTexture(const std::string& texid)
+{
+	texIdPlayer = texid;
+	spritePlayer.setTexture(TEXTURE_MGR.Get(texIdPlayer));
+}
+
 void Player::SetSide(Sides s)
 {
 	side = s;
@@ -80,14 +86,7 @@ void Player::SetOrigin(const sf::Vector2f& newOrigin)
 
 void Player::Init()
 {
-	if (playerSelect == PlayerSelect::Player1)
-	{
-		spritePlayer.setTexture(TEXTURE_MGR.Get(texIdPlayer));
-	}
-	if (playerSelect == PlayerSelect::Player2)
-	{
-		spritePlayer.setTexture(TEXTURE_MGR.Get(texIdPlayer2));
-	}
+	spritePlayer.setTexture(TEXTURE_MGR.Get(texIdPlayer));
 	SetOrigin(Origins::BC);
 
 	spriteAxe.setTexture(TEXTURE_MGR.Get(texIdAxe));

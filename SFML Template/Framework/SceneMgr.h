@@ -26,12 +26,8 @@ protected:
 	void OnPostDraw();
 
 public:
-
-	int player1Select;
-	int player2Select;
 	
 	PlayerSelect player1sprite;
-	PlayerSelect player2sprite;
 
 	void Init();
 	void Release();
