@@ -43,8 +43,7 @@ void SceneDev1::Init()
 
 	tree = AddGo(new Tree("Tree"));
 	
-	player1 = AddGo(new Player(PlayerSelect::Player1, "Player"));
-	player2 = AddGo(new Player(PlayerSelect::Player2, "Player"));
+	player = AddGo(new Player(PlayerSelect::Player1, "Player"));
 
 
 	centerMsg = AddGo(new TextGo("fonts/KOMIKAP_.ttf", "Center Message"));
@@ -56,10 +55,8 @@ void SceneDev1::Init()
 	Scene::Init();
 
 	tree->SetPosition({ 1920.f / 2, 1080.f - 200.f });
-	player1->SetPosition({ 1920.f / 2, 1080.f - 200.f });
-	player2->SetPosition({ 1920.f / 2, 1080.f - 200.f });
-	player1->SetActive(false);
-	player2->SetActive(false);
+
+	player->SetPosition({1920.f / 2, 1080.f - 200.f});
 
 	centerMsg->text.setCharacterSize(100);
 	centerMsg->text.setFillColor(sf::Color::White);
@@ -93,20 +90,10 @@ void SceneDev1::Enter()
 	SOUNDBUFFER_MGR.Load(sbIdDeath);
 	SOUNDBUFFER_MGR.Load(sbIdTimeOut);
 
-	if (SCENE_MGR.player1Select == 1)
-	{
-		player1->SetActive(true);
-		player = player1;
-	}
-	if (SCENE_MGR.player1Select == 2)
-	{
-		player2->SetActive(true);
-		player = player2;
-	}
-
 	sfxDeath.setBuffer(SOUNDBUFFER_MGR.Get(sbIdDeath));
 	sfxTimeOut.setBuffer(SOUNDBUFFER_MGR.Get(sbIdTimeOut));
 
+	player->SetActive(true);
 	player->SetSceneGame(this);
 
 	Scene::Enter();
