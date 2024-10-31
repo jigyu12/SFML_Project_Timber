@@ -41,6 +41,9 @@ protected:
 	std::string sbIdDeath = "sound/death.wav";
 	std::string sbIdTimeOut = "sound/out_of_time.wav";
 
+	bool isPlayer1GameOver = false;
+	bool isPlayer2GameOver = false;
+
 public:
 	SceneDev2();
 	~SceneDev2() = default;
@@ -62,5 +65,8 @@ public:
 	void UpdateGameOver(float dt);
 	void UpdatePause(float dt);
 
-	void OnChop(Sides side);
+	void Player1Chopping(Sides side);
+	void Player2Chopping(Sides side);
+
+	void OnDie(bool isTimeOver, Player* player);
 };
