@@ -2,12 +2,14 @@
 #include "GameObject.h"
 
 class SceneDev1;
+class SceneDev2;
 
 class Player : public GameObject
 {
 protected:
 	sf::Sound sfxChop;
 
+	PlayerSelect playerSelect = PlayerSelect::None;
 
 	sf::Sprite spritePlayer;
 	sf::Sprite spriteAxe;
@@ -34,10 +36,10 @@ protected:
 	float timeScale = 1.f;
 	float appleTimer = 0.f;
 
-	SceneDev1* sceneGame = nullptr;
+	Scene* sceneGame = nullptr;
 
 public:
-	Player(const std::string& name = "");
+	Player(PlayerSelect select, const std::string& name = "");
 	virtual ~Player() = default;
 
 	Sides GetSide() const { return side; }
@@ -56,13 +58,16 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window)  override;
 
-	void SetSceneGame(SceneDev1* scene);
+	void SetSceneGame(Scene* scene);
+
+	void Player1Update(float dt);
+	void Player2Update(float dt);
 
 	void Chopped(Sides side, BranchStatus branch);
 
 	float GetGodMode() const { return godMode; }
 	void SetGodMode(float time);
-
+	
 	float GetPlayerTimeScale() const { return timeScale; }
 	void SetPlayerTimeScale(float timescale);
 };
