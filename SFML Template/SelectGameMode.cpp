@@ -43,12 +43,12 @@ void SelectGameMode::Update(float dt)
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
 	{
 		SCENE_MGR.SetGameMode(SceneIds::Dev1);
-		SCENE_MGR.ChangeScene(SceneIds::PraticePage);
+		SCENE_MGR.ChangeScene(SceneIds::SelectCharacter);
 	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
 	{
 		SCENE_MGR.SetGameMode(SceneIds::Dev2);
-		SCENE_MGR.ChangeScene(SceneIds::PraticePage);
+		SCENE_MGR.ChangeScene(SceneIds::SelectCharacter);
 	}
 
 

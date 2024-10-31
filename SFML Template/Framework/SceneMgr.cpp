@@ -5,13 +5,12 @@
 #include "MainTitleScene.h"
 #include "SelectGameMode.h"
 #include "SelectCharacter.h"
-#include "PraticePage.h"
 void SceneMgr::Init()
 {
 	
 	scenes.push_back(new MainTitleScene());
 	scenes.push_back(new SelectGameMode());
-	scenes.push_back(new PraticePage());
+	scenes.push_back(new SelectCharacter());
 	scenes.push_back(new SceneDev1());	
 	scenes.push_back(new SceneDev2());
 
