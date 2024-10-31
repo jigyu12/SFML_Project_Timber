@@ -267,6 +267,7 @@ void Player::Player2Update(float dt)
 	{
 		isChppoing = false;
 	}
+}
 
 void Player::SetGodMode(float godModeTime)
 {
