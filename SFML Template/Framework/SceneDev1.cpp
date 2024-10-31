@@ -43,7 +43,7 @@ void SceneDev1::Init()
 	TEXTURE_MGR.Load("graphics/axe.png");
 
 	tree = AddGo(new Tree("Tree"));
-	
+
 	player = AddGo(new Player(PlayerSelect::Player1, "Player1"));
 
 	centerMsg = AddGo(new TextGo("fonts/KOMIKAP_.ttf", "Center Message"));
@@ -56,7 +56,7 @@ void SceneDev1::Init()
 
 	tree->SetPosition({ 1920.f / 2, 1080.f - 200.f });
 
-	player->SetPosition({1920.f / 2, 1080.f - 200.f});
+	player->SetPosition({ 1920.f / 2, 1080.f - 200.f });
 
 	centerMsg->text.setCharacterSize(100);
 	centerMsg->text.setFillColor(sf::Color::White);
@@ -73,6 +73,8 @@ void SceneDev1::Init()
 
 void SceneDev1::Enter()
 {
+	ViewTest::Instance().SetViewRect(SceneIds::Dev1);
+
 	std::cout << "SceneDev1::Enter()" << std::endl;
 
 	TEXTURE_MGR.Load("graphics/background.png");
@@ -167,6 +169,7 @@ void SceneDev1::Update(float dt)
 void SceneDev1::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
+	window.setView(*ViewTest::Instance().GetView(0));
 }
 
 void SceneDev1::SetCenterMessage(const std::string& msg)
@@ -260,9 +263,11 @@ void SceneDev1::UpdateGame(float dt)
 	timer = player->GetLife();
 	uiTimer->SetValue(timer / gameTime);
 
-	bee->SetScale(bee->GetScale() * (1.f + dt * 3.f));
+	bee->SetScale(bee->GetScale() * (1.f + dt * (8.f / (1.f + bee->GetScale().x))));
+
 	if (bee->GetScale().x > 30.f)
 	{
+		sfxBee.stop();
 		bee->SetActive(false);
 	}
 }

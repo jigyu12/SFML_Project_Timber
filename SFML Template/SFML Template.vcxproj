@@ -170,6 +170,7 @@
     <ClCompile Include="UiScore.cpp" />
     <ClCompile Include="UiTimebar.cpp" />
     <ClCompile Include="Framework\Utils.cpp" />
+    <ClCompile Include="Framework\ViewTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Branch.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="UiScore.h" />
     <ClInclude Include="UiTimebar.h" />
     <ClInclude Include="Framework\Utils.h" />
+    <ClInclude Include="Framework\ViewTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

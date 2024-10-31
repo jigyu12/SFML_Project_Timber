@@ -84,6 +84,8 @@ void SceneDev2::Init()
 
 void SceneDev2::Enter()
 {
+	ViewTest::Instance().SetViewRect(SceneIds::Dev2);
+
 	std::cout << "SceneDev2::Enter()" << std::endl;
 
 	TEXTURE_MGR.Load("graphics/background.png");
@@ -183,6 +185,8 @@ void SceneDev2::Update(float dt)
 {
 	Scene::Update(dt);
 
+	ViewTest::Instance().Update(dt);
+
 	switch (currentStatus)
 	{
 	case SceneDev2::Status::Awake:
@@ -202,6 +206,11 @@ void SceneDev2::Update(float dt)
 
 void SceneDev2::Draw(sf::RenderWindow& window)
 {
+	sf::View* tmp = ViewTest::Instance().GetView(0);
+	window.setView(*tmp);
+	Scene::Draw(window);
+	sf::View* tmp2 = ViewTest::Instance().GetView(1);
+	window.setView(*tmp2);
 	Scene::Draw(window);
 }
 
@@ -297,17 +306,19 @@ void SceneDev2::UpdateGame(float dt)
 
 	if (bee1->IsActive())
 	{
-		bee1->SetScale(bee1->GetScale() * (1.f + dt * 3.f));
+		bee1->SetScale(bee1->GetScale() * (1.f + dt * (8.f / (1.f + bee1->GetScale().x))));
 		if (bee1->GetScale().x > 30.f)
 		{
+			sfxBee.stop();
 			bee1->SetActive(false);
 		}
 	}
 	if (bee2->IsActive())
 	{
-		bee2->SetScale(bee2->GetScale() * (1.f + dt * 3.f));
+		bee2->SetScale(bee2->GetScale() * (1.f + dt * (8.f / (1.f + bee2->GetScale().x))));
 		if (bee2->GetScale().x > 30.f)
 		{
+			sfxBee.stop();
 			bee2->SetActive(false);
 		}
 	}
