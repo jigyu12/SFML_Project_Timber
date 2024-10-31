@@ -57,11 +57,11 @@ void SceneDev2::Init()
 	tree2->SetPosition({ 1920.f / 2 / 2 * 3, 1080.f - 200.f });
 	player2->SetPosition({ 1920.f / 2 / 2 * 3, 1080.f - 200.f });
 
-	centerMsg1->text.setCharacterSize(100);
+	centerMsg1->text.setCharacterSize(50);
 	centerMsg1->text.setFillColor(sf::Color::White);
 	centerMsg1->SetPosition({ 1920.f / 2.f / 2.f, 1080.f / 2.f });
 
-	centerMsg2->text.setCharacterSize(100);
+	centerMsg2->text.setCharacterSize(50);
 	centerMsg2->text.setFillColor(sf::Color::White);
 	centerMsg2->SetPosition({ 1920.f / 2.f / 2.f * 3, 1080.f / 2.f });
 
@@ -132,12 +132,6 @@ void SceneDev2::Update(float dt)
 {
 	Scene::Update(dt);
 
-
-	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
-	{
-		SCENE_MGR.ChangeScene(SceneIds::Dev2);
-	}
-
 	switch (currentStatus)
 	{
 	case SceneDev2::Status::Awake:
@@ -190,6 +184,7 @@ void SceneDev2::SetStatus(Status newStatus)
 		uiTimer2->SetValue(1.f);
 		break;
 	case SceneDev2::Status::Game:
+		SCENE_MGR.SetIsGaming(true);
 		if (prevStatus == Status::GameOver)
 		{
 			timer1 = gameTime;
@@ -204,13 +199,17 @@ void SceneDev2::SetStatus(Status newStatus)
 			tree2->Reset();
 		}
 		FRAMEWORK.SetTimeScale(1.f);
-		SetVisibleCenterMessage(centerMsg1,false);
-		SetVisibleCenterMessage(centerMsg2,false);
+		if(!isPlayer1GameOver)
+			SetVisibleCenterMessage(centerMsg1,false);
+		else if(!isPlayer2GameOver)
+			SetVisibleCenterMessage(centerMsg2,false);
 		break;
 	case SceneDev2::Status::GameOver:
 		FRAMEWORK.SetTimeScale(0.f);
 		SetVisibleCenterMessage(centerMsg1, true);
 		SetVisibleCenterMessage(centerMsg2, true);
+
+		SCENE_MGR.SetIsGaming(false);
 		break;
 	case SceneDev2::Status::Pause:
 		FRAMEWORK.SetTimeScale(0.f);
@@ -218,6 +217,8 @@ void SceneDev2::SetStatus(Status newStatus)
 		SetVisibleCenterMessage(centerMsg2, true);
 		SetCenterMessage(centerMsg1,"PAUSE! ESC TO RESUME!");
 		SetCenterMessage(centerMsg2,"PAUSE! ESC TO RESUME!");
+
+		SCENE_MGR.SetIsGaming(false);
 		break;
 	}
 }
@@ -242,24 +243,20 @@ void SceneDev2::UpdateGame(float dt)
 	timer2 = Utils::Clamp(timer2 - dt, 0.f, gameTime);
 	uiTimer1->SetValue(timer1 / gameTime);
 	uiTimer2->SetValue(timer2 / gameTime);
-	if (timer1 <= 0.f)
+	if (timer1 <= 0.f && !isPlayer1GameOver)
 	{
 		sfxTimeOut.play();
 
-		player1->OnDie();
-		SetCenterMessage(centerMsg1, "Time Over!");
-		SetStatus(Status::GameOver);
-		return;
+		OnDie(true, player1);
+		//return;
 	}
 
-	if (timer2 <= 0.f)
+	if (timer2 <= 0.f && !isPlayer2GameOver)
 	{
 		sfxTimeOut.play();
 
-		player2->OnDie();
-		SetCenterMessage(centerMsg2, "Time Over!");
-		SetStatus(Status::GameOver);
-		return;
+		OnDie(true, player2);
+		//return;
 	}
 }
 
@@ -267,7 +264,7 @@ void SceneDev2::UpdateGameOver(float dt)
 {
 	if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
-		SetStatus(Status::Game);
+		SCENE_MGR.ChangeScene(SceneIds::MainTitle);
 	}
 }
 
@@ -279,21 +276,119 @@ void SceneDev2::UpdatePause(float dt)
 	}
 }
 
-void SceneDev2::OnChop(Sides side)
+void SceneDev2::Player1Chopping(Sides side)
 {
-	
+	Sides branchSide = tree1->Chop(side);
+	BranchStatus branchStat = tree1->GetLastBranchStatus();
+	player1->Chopped(branchSide, branchStat);
 
-	/*Sides branchSide = tree->Chop(side);
-	if (player->GetSide() == branchSide)
+	if (player1->GetSide() == branchSide)
 	{
-		sfxDeath.play();
-
-		player->OnDie();
-		SetCenterMessage("You Die!");
-		SetStatus(Status::GameOver);
+		BranchStatus currentBranch = tree1->GetLastBranchStatus();
+		switch (tree1->GetLastBranchStatus())
+		{
+		case BranchStatus::Normal:
+			if (player1->GetGodMode() <= 0.f)
+			{
+				sfxDeath.play();
+				OnDie(false, player1);
+			}
+			else
+			{
+				timer1 += 0.5f;
+			}
+			break;
+		case BranchStatus::Apple:
+			FRAMEWORK.SetTimeScale(0.5f);
+			break;
+		case BranchStatus::GoldenApple:
+			player1->SetGodMode(2.f);
+			break;
+		case BranchStatus::BeeHive:
+			break;
+		}
 	}
 	else
 	{
-		timer += 1.f;
-	}*/
+		timer1 += 1.f;
+	}
+}
+
+void SceneDev2::Player2Chopping(Sides side)
+{
+	Sides branchSide = tree2->Chop(side);
+	BranchStatus branchStat = tree2->GetLastBranchStatus();
+	player2->Chopped(branchSide, branchStat);
+
+	if (player2->GetSide() == branchSide)
+	{
+		BranchStatus currentBranch = tree2->GetLastBranchStatus();
+		switch (tree2->GetLastBranchStatus())
+		{
+		case BranchStatus::Normal:
+			if (player2->GetGodMode() <= 0.f)
+			{
+				sfxDeath.play();
+				OnDie(false, player2);
+			}
+			else
+			{
+				timer2 += 0.5f;
+			}
+			break;
+		case BranchStatus::Apple:
+			FRAMEWORK.SetTimeScale(0.5f);
+			break;
+		case BranchStatus::GoldenApple:
+			player2->SetGodMode(2.f);
+			break;
+		case BranchStatus::BeeHive:
+			break;
+		}
+	}
+	else
+	{
+		timer2 += 1.f;
+	}
+}
+
+void SceneDev2::OnDie(bool isTimeOver, Player* player)
+{
+	if (isTimeOver)
+	{
+		if (player == player1)
+		{
+			SetCenterMessage(centerMsg1, "           Time Over!\nPress Enter to MainTitle");
+			isPlayer1GameOver = true;
+		}
+		else if (player == player2)
+		{
+			SetCenterMessage(centerMsg2, "           Time Over!\nPress Enter to MainTitle");
+			isPlayer2GameOver = true;
+		}
+
+		if (isPlayer1GameOver && isPlayer2GameOver)
+		{
+			SetStatus(Status::GameOver);
+			sfxDeath.play();
+		}
+		return;
+	}
+
+	if (player == player1)
+	{
+		SetCenterMessage(centerMsg1, "           You Die!\nPress Enter to MainTitle");
+		isPlayer1GameOver = true;
+	}
+	else if (player == player2)
+	{
+		SetCenterMessage(centerMsg2, "           You Die!\nPress Enter to MainTitle");
+		isPlayer2GameOver = true;
+	}
+
+	if (isPlayer1GameOver && isPlayer2GameOver)
+	{
+		SetStatus(Status::GameOver);
+		sfxTimeOut.play();
+	}
 }

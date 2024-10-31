@@ -15,7 +15,7 @@ void MainTitleScene::Init()
 
 	mainMassage->text.setCharacterSize(100);
 	mainMassage->text.setFillColor(sf::Color::Blue);
-	SetMainMassage("Game Start!!!!!!!");
+	SetMainMassage("      Game Start!!!!!!!\nPress Space to Start!!!");
 	mainMassage->SetPosition({ 1920.f / 2,1080.f / 2 });
 	
 }
