@@ -32,3 +32,10 @@ enum class Sides
 	Right,
 	None,
 };
+
+enum class PlayerSelect
+{
+	Player1,
+	Player2,
+	None,
+};

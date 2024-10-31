@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "SceneDev1.h"	
+#include "SceneDev2.h"	
 
-Player::Player(const std::string& name) : GameObject(name)
+Player::Player(PlayerSelect select, const std::string& name)
+	: GameObject(name), playerSelect(select)
 {
 	sortingLayer = SortingLayers::Foreground;
 	sortingOrder = 0;
@@ -95,7 +97,11 @@ void Player::Reset()
 	isChppoing = false;
 	SetPosition(position);
 	SetScale({ 1.f, 1.f });
-	SetSide(Sides::Right);
+
+	if(playerSelect == PlayerSelect::Player1)
+		SetSide(Sides::Right);
+	else if (playerSelect == PlayerSelect::Player2)
+		SetSide(Sides::Left);
 }
 
 
@@ -109,31 +115,8 @@ void Player::Update(float dt)
 	if (!isAlive)
 		return;
 
-	if (InputMgr::GetKeyDown(sf::Keyboard::Left))
-	{
-		isChppoing = true;
-		SetSide(Sides::Left);
-		sceneGame->OnChop(Sides::Left);
-		sfxChop.play();
-	}
-
-	if (InputMgr::GetKeyUp(sf::Keyboard::Left))
-	{
-		isChppoing = false;
-	}
-
-	if (InputMgr::GetKeyDown(sf::Keyboard::Right))
-	{
-		isChppoing = true;
-		SetSide(Sides::Right);
-		sceneGame->OnChop(Sides::Right);
-		sceneGame->OnChop(Sides::Left);
-	}
-
-	if (InputMgr::GetKeyUp(sf::Keyboard::Right))
-	{
-		isChppoing = false;
-	}
+	Player1Update(dt);
+	Player2Update(dt);
 }
 
 void Player::Draw(sf::RenderWindow& window)
@@ -152,7 +135,86 @@ void Player::Draw(sf::RenderWindow& window)
 	}
 }
 
-void Player::SetSceneGame(SceneDev1* scene)
+void Player::SetSceneGame(Scene* scene)
 {
 	sceneGame = scene;
+}
+void Player::Player1Update(float dt)
+{
+	if (playerSelect != PlayerSelect::Player1)
+		return;
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::A))
+	{
+		isChppoing = true;
+		SetSide(Sides::Left);
+
+		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
+			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Left);
+		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
+			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Left);
+
+		sfxChop.play();
+	}
+
+	if (InputMgr::GetKeyUp(sf::Keyboard::A))
+	{
+		isChppoing = false;
+	}
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::D))
+	{
+		isChppoing = true;
+		SetSide(Sides::Right);
+
+		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
+			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Right);
+		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
+			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Right);
+	}
+
+	if (InputMgr::GetKeyUp(sf::Keyboard::D))
+	{
+		isChppoing = false;
+	}
+}
+
+void Player::Player2Update(float dt)
+{
+	if (playerSelect != PlayerSelect::Player2)
+		return;
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::Left))
+	{
+		isChppoing = true;
+		SetSide(Sides::Left);
+
+		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
+			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Left);
+		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
+			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Left);
+
+		sfxChop.play();
+	}
+
+	if (InputMgr::GetKeyUp(sf::Keyboard::Left))
+	{
+		isChppoing = false;
+	}
+
+	if (InputMgr::GetKeyDown(sf::Keyboard::Right))
+	{
+		isChppoing = true;
+		SetSide(Sides::Right);
+
+		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
+			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Right);
+		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
+			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Right);
+	}
+
+	if (InputMgr::GetKeyUp(sf::Keyboard::Right))
+	{
+		isChppoing = false;
+	}
 }
