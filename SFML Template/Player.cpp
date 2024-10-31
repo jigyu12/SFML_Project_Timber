@@ -154,6 +154,8 @@ void Player::Update(float dt)
 		//Ȳ�Կ� ToDo - 2�÷��̾� ���� �߰��ؾ���
 		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 			dynamic_cast<SceneDev1*>(sceneGame)->OnDie(true);
+		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
+			dynamic_cast<SceneDev2*>(sceneGame)->OnDie(true, this);
 	}
 
 	AddLife(-dt * timeScale);

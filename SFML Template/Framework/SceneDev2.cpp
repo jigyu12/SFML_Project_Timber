@@ -111,6 +111,10 @@ void SceneDev2::Enter()
 	SOUNDBUFFER_MGR.Load(sbIdBee);
 	SOUNDBUFFER_MGR.Load(sbIdDeath);
 	SOUNDBUFFER_MGR.Load(sbIdTimeOut);
+
+	isPlayer1GameOver = false;
+	isPlayer2GameOver = false;
+
 	if (SCENE_MGR.player1Select == 1)
 	{
 		player1_1->SetActive(true);
@@ -136,6 +140,18 @@ void SceneDev2::Enter()
 
 	player1->SetSceneGame(this);
 	player2->SetSceneGame(this);
+
+	timer1 = gameTime;
+	timer2 = gameTime;
+
+	uiTimer1->SetValue(1.f);
+	uiTimer2->SetValue(1.f);
+
+	player1->Reset();
+	player2->Reset();
+	tree1->Reset();
+	tree2->Reset();
+
 	bee1->SetOrigin(Origins::MC);
 	bee1->sortingLayer = SortingLayers::Foreground;
 	bee1->sortingOrder = 10;
@@ -251,7 +267,7 @@ void SceneDev2::SetStatus(Status newStatus)
 		FRAMEWORK.SetTimeScale(1.f);
 		if (!isPlayer1GameOver)
 			SetVisibleCenterMessage(centerMsg1, false);
-		else if (!isPlayer2GameOver)
+		if (!isPlayer2GameOver)
 			SetVisibleCenterMessage(centerMsg2, false);
 		break;
 	case SceneDev2::Status::GameOver:
