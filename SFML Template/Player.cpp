@@ -9,7 +9,7 @@ Player::Player(PlayerSelect select, const std::string& name)
 	sortingLayer = SortingLayers::Foreground;
 	sortingOrder = 0;
 
-	if (select == PlayerSelect::Player1)
+	if (name == "Player1")
 	{
 		LeftKey = sf::Keyboard::A;
 		RightKey = sf::Keyboard::D;
@@ -119,11 +119,11 @@ void Player::Reset()
 	life = 5.f;
 	SetPosition(position);
 	SetScale({ 1.f, 1.f });
-
-	if (playerSelect == PlayerSelect::Player1)
-		SetSide(Sides::Right);
-	else if (playerSelect == PlayerSelect::Player2)
-		SetSide(Sides::Left);
+	SetSide(Sides::Right);
+	//if (playerSelect == PlayerSelect::Player1)
+	//	SetSide(Sides::Right);
+	//else if (playerSelect == PlayerSelect::Player2)
+	//	SetSide(Sides::Left);
 }
 
 

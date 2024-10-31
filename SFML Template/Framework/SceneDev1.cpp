@@ -44,9 +44,8 @@ void SceneDev1::Init()
 
 	tree = AddGo(new Tree("Tree"));
 	
-	player1 = AddGo(new Player(PlayerSelect::Player1, "Player"));
-	player2 = AddGo(new Player(PlayerSelect::Player2, "Player"));
-
+	player1 = AddGo(new Player(PlayerSelect::Player1, "Player1"));
+	player2 = AddGo(new Player(PlayerSelect::Player2, "Player1"));
 
 	centerMsg = AddGo(new TextGo("fonts/KOMIKAP_.ttf", "Center Message"));
 	centerMsg->sortingLayer = SortingLayers::UI;
@@ -101,10 +100,12 @@ void SceneDev1::Enter()
 	if (SCENE_MGR.player1Select == 1)
 	{
 		player1->SetActive(true);
+		player2->SetActive(false);
 		player = player1;
 	}
 	if (SCENE_MGR.player1Select == 2)
 	{
+		player1->SetActive(false);
 		player2->SetActive(true);
 		player = player2;
 	}

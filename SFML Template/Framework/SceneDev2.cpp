@@ -68,8 +68,8 @@ void SceneDev2::Init()
 	player1_2->SetActive(false);
 
 	tree2->SetPosition({ 1920.f * 0.75f, 1080.f - 200.f });
-	player2_2->SetPosition({ 1920.f / 0.75f, 1080.f - 200.f });
-	player2_1->SetPosition({ 1920.f / 0.75f, 1080.f - 200.f });
+	player2_1->SetPosition({ 1920.f * 0.75f, 1080.f - 200.f });
+	player2_2->SetPosition({ 1920.f * 0.75f, 1080.f - 200.f });
 	player2_1->SetActive(false);
 	player2_2->SetActive(false);
 
@@ -83,11 +83,11 @@ void SceneDev2::Init()
 
 	uiTimer1->Set({ 500.f, 100.f }, sf::Color::Red);
 	uiTimer1->SetOrigin(Origins::ML);
-	uiTimer1->SetPosition({ 1920.f / 2.f - 500.f, 1080.f - 100.f });
+	uiTimer1->SetPosition({ 1920.f * 0.25f - 250.f, 1080.f - 100.f });
 
 	uiTimer2->Set({ 500.f, 100.f }, sf::Color::Red);
 	uiTimer2->SetOrigin(Origins::ML);
-	uiTimer2->SetPosition({ 1920.f / 2.f + 250.f, 1080.f - 100.f });
+	uiTimer2->SetPosition({ 1920.f * 0.75f - 250.f, 1080.f - 100.f });
 }
 
 void SceneDev2::Enter()
@@ -114,12 +114,16 @@ void SceneDev2::Enter()
 	{
 		player1_1->SetActive(true);
 		player2_1->SetActive(true);
+		player1_2->SetActive(false);
+		player2_2->SetActive(false);
 		player1 = player1_1;
 		player2 = player2_1;
 		
 	}
 	if (SCENE_MGR.player1Select == 2)
 	{
+		player1_1->SetActive(false);
+		player2_1->SetActive(false);
 		player1_2->SetActive(true);
 		player2_2->SetActive(true);
 		player1 = player1_2;
