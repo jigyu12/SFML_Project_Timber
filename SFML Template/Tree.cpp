@@ -163,9 +163,14 @@ void Tree::ClearEffectLog()
 	logEffects.clear();
 }
 
-Branch::BranchStatus Tree::GetLastBranchStatus() const
+BranchStatus Tree::GetLastBranchStatus() const
 {
 	return lastBranchStat;
+}
+
+Sides Tree::RandomSide() const
+{
+	return Sides();
 }
 
 Sides Tree::Chop(Sides side)

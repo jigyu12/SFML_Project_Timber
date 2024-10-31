@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
-#include "SceneDev1.h"	
+#include "SceneDev1.h"
 
 Player::Player(const std::string& name) : GameObject(name)
 {
@@ -177,6 +177,11 @@ void Player::Draw(sf::RenderWindow& window)
 void Player::SetSceneGame(SceneDev1* scene)
 {
 	sceneGame = scene;
+}
+
+void Player::Chopped(Sides side, BranchStatus branch)
+{
+
 }
 
 void Player::SetGodMode(float godModeTime)

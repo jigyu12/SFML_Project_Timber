@@ -32,3 +32,12 @@ enum class Sides
 	Right,
 	None,
 };
+
+enum class BranchStatus
+{
+	Normal,
+	Apple,
+	GoldenApple,
+	BeeHive,
+	BadApple,
+};

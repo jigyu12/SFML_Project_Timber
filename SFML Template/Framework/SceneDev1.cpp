@@ -234,8 +234,6 @@ void SceneDev1::UpdateGame(float dt)
 		sfxTimeOut.play();
 
 		player->OnDie();
-		SetCenterMessage("Time Over!");
-		SetStatus(Status::GameOver);
 		return;
 	}
 }
@@ -270,8 +268,7 @@ void SceneDev1::OnChop(Sides side)
 				sfxDeath.play();
 
 				player->OnDie();
-				SetCenterMessage("You Die!");
-				SetStatus(Status::GameOver);
+				
 			}
 			else
 			{
@@ -294,4 +291,16 @@ void SceneDev1::OnChop(Sides side)
 		SetScore(score + 100);
 		timer += 1.f;
 	}
+}
+
+void SceneDev1::OnDie(bool isTimeOver)
+{
+	if (isTimeOver)
+	{
+		SetCenterMessage("Time Over!");
+		SetStatus(Status::GameOver);
+		return;
+	}
+	SetCenterMessage("You Die!");
+	SetStatus(Status::GameOver);
 }

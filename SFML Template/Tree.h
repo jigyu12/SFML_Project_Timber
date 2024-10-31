@@ -14,7 +14,7 @@ protected:
 	std::string treeTexId = "graphics/tree.png";
 	std::string branchTexId = "graphics/branch.png";
 
-	Branch::BranchStatus lastBranchStat = Branch::BranchStatus::Normal;
+	BranchStatus lastBranchStat = BranchStatus::Normal;
 
 	float brachOffsetY = 150.f;
 
@@ -42,6 +42,6 @@ public:
 
 	void ClearEffectLog();
 
-	Branch::BranchStatus GetLastBranchStatus() const;
+	BranchStatus GetLastBranchStatus() const;
 };
 

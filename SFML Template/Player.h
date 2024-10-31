@@ -58,6 +58,8 @@ public:
 
 	void SetSceneGame(SceneDev1* scene);
 
+	void Chopped(Sides side, BranchStatus branch);
+
 	float GetGodMode() const { return godMode; }
 	void SetGodMode(float time);
 

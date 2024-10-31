@@ -62,6 +62,7 @@ public:
 	void UpdatePause(float dt);
 
 	void OnChop(Sides side);
+	void OnDie(bool isTimeOver);
 
 };
 
