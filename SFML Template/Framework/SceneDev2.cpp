@@ -35,33 +35,43 @@ void SceneDev2::Init()
 	TEXTURE_MGR.Load("graphics/rip.png");
 	TEXTURE_MGR.Load("graphics/axe.png");
 
-	tree = AddGo(new Tree("Tree"));
+	tree1 = AddGo(new Tree("Tree1"));
+	tree2 = AddGo(new Tree("Tree2"));
 	player1 = AddGo(new Player(PlayerSelect::Player1, "Player1"));
 	player2 = AddGo(new Player(PlayerSelect::Player2, "Player2"));
 
-	centerMsg = AddGo(new TextGo("fonts/KOMIKAP_.ttf", "Center Message"));
-	centerMsg->sortingLayer = SortingLayers::UI;
+	centerMsg1 = AddGo(new TextGo("fonts/KOMIKAP_.ttf", "Center Message1"));
+	centerMsg1->sortingLayer = SortingLayers::UI;
 
-	uiScore = AddGo(new UiScore("fonts/KOMIKAP_.ttf", "Ui Score"));
-	uiTimer = AddGo(new UiTimebar("Ui Timer"));
+	centerMsg2 = AddGo(new TextGo("fonts/KOMIKAP_.ttf", "Center Message2"));
+	centerMsg2->sortingLayer = SortingLayers::UI;
+
+	uiTimer1 = AddGo(new UiTimebar("Ui Timer1"));
+	uiTimer2 = AddGo(new UiTimebar("Ui Timer2"));
 
 	Scene::Init();
 
-	tree->SetPosition({ 1920.f / 2, 1080.f - 200.f });
-	player1->SetPosition({ 1920.f / 2, 1080.f - 200.f });
-	player2->SetPosition({ 1920.f / 2, 1080.f - 200.f });
+	tree1->SetPosition({ 1920.f / 2 / 2, 1080.f - 200.f });
+	player1->SetPosition({ 1920.f / 2 / 2, 1080.f - 200.f });
 
-	centerMsg->text.setCharacterSize(100);
-	centerMsg->text.setFillColor(sf::Color::White);
-	centerMsg->SetPosition({ 1920.f / 2.f, 1080.f / 2.f });
+	tree2->SetPosition({ 1920.f / 2 / 2 * 3, 1080.f - 200.f });
+	player2->SetPosition({ 1920.f / 2 / 2 * 3, 1080.f - 200.f });
 
-	uiScore->text.setCharacterSize(75);
-	uiScore->text.setFillColor(sf::Color::White);
-	uiScore->SetPosition({ 30.f, 30.f });
+	centerMsg1->text.setCharacterSize(100);
+	centerMsg1->text.setFillColor(sf::Color::White);
+	centerMsg1->SetPosition({ 1920.f / 2.f / 2.f, 1080.f / 2.f });
 
-	uiTimer->Set({ 500.f, 100.f }, sf::Color::Red);
-	uiTimer->SetOrigin(Origins::ML);
-	uiTimer->SetPosition({ 1920.f / 2.f - 250.f, 1080.f - 100.f });
+	centerMsg2->text.setCharacterSize(100);
+	centerMsg2->text.setFillColor(sf::Color::White);
+	centerMsg2->SetPosition({ 1920.f / 2.f / 2.f * 3, 1080.f / 2.f });
+
+	uiTimer1->Set({ 500.f, 100.f }, sf::Color::Red);
+	uiTimer1->SetOrigin(Origins::ML);
+	uiTimer1->SetPosition({ 1920.f / 2.f - 500.f, 1080.f - 100.f });
+
+	uiTimer2->Set({ 500.f, 100.f }, sf::Color::Red);
+	uiTimer2->SetOrigin(Origins::ML);
+	uiTimer2->SetPosition({ 1920.f / 2.f + 250.f, 1080.f - 100.f });
 }
 
 void SceneDev2::Enter()
@@ -94,11 +104,12 @@ void SceneDev2::Enter()
 
 void SceneDev2::Exit()
 {
-	std::cout << "SceneDev1::Exit()" << std::endl;
+	std::cout << "SceneDev2::Exit()" << std::endl;
 
 	player1->SetSceneGame(nullptr);
 	player2->SetSceneGame(nullptr);
-	tree->ClearEffectLog();
+	tree1->ClearEffectLog();
+	tree2->ClearEffectLog();
 
 	Scene::Exit();
 
@@ -149,21 +160,15 @@ void SceneDev2::Draw(sf::RenderWindow& window)
 	Scene::Draw(window);
 }
 
-void SceneDev2::SetCenterMessage(const std::string& msg)
+void SceneDev2::SetCenterMessage(TextGo* textGo, const std::string& msg)
 {
-	centerMsg->text.setString(msg);
-	centerMsg->SetOrigin(Origins::MC);
+	textGo->text.setString(msg);
+	textGo->SetOrigin(Origins::MC);
 }
 
-void SceneDev2::SetVisibleCenterMessage(bool visible)
+void SceneDev2::SetVisibleCenterMessage(TextGo* textGo, bool visible)
 {
-	centerMsg->SetActive(visible);
-}
-
-void SceneDev2::SetScore(int score)
-{
-	this->score = score;
-	uiScore->SetScore(this->score);
+	textGo->SetActive(visible);
 }
 
 void SceneDev2::SetStatus(Status newStatus)
@@ -175,37 +180,44 @@ void SceneDev2::SetStatus(Status newStatus)
 	{
 	case SceneDev2::Status::Awake:
 		FRAMEWORK.SetTimeScale(0.f);
-		SetVisibleCenterMessage(true);
-		SetCenterMessage("Press Enter To Start!!");
-		score = 0;
-		timer = gameTime;
-		SetScore(score);
-		uiTimer->SetValue(1.f);
+		SetVisibleCenterMessage(centerMsg1, true);
+		SetVisibleCenterMessage(centerMsg2, true);
+		SetCenterMessage(centerMsg1, "Press Enter To Start!!");
+		SetCenterMessage(centerMsg2, "Press Enter To Start!!");
+		timer1 = gameTime;
+		timer2 = gameTime;
+		uiTimer1->SetValue(1.f);
+		uiTimer2->SetValue(1.f);
 		break;
 	case SceneDev2::Status::Game:
 		if (prevStatus == Status::GameOver)
 		{
-			score = 0;
-			timer = gameTime;
+			timer1 = gameTime;
+			timer2 = gameTime;
 
-			SetScore(score);
-			uiTimer->SetValue(1.f);
+			uiTimer1->SetValue(1.f);
+			uiTimer2->SetValue(1.f);
 
 			player1->Reset();
 			player2->Reset();
-			tree->Reset();
+			tree1->Reset();
+			tree2->Reset();
 		}
 		FRAMEWORK.SetTimeScale(1.f);
-		SetVisibleCenterMessage(false);
+		SetVisibleCenterMessage(centerMsg1,false);
+		SetVisibleCenterMessage(centerMsg2,false);
 		break;
 	case SceneDev2::Status::GameOver:
 		FRAMEWORK.SetTimeScale(0.f);
-		SetVisibleCenterMessage(true);
+		SetVisibleCenterMessage(centerMsg1, true);
+		SetVisibleCenterMessage(centerMsg2, true);
 		break;
 	case SceneDev2::Status::Pause:
 		FRAMEWORK.SetTimeScale(0.f);
-		SetVisibleCenterMessage(true);
-		SetCenterMessage("PAUSE! ESC TO RESUME!");
+		SetVisibleCenterMessage(centerMsg1, true);
+		SetVisibleCenterMessage(centerMsg2, true);
+		SetCenterMessage(centerMsg1,"PAUSE! ESC TO RESUME!");
+		SetCenterMessage(centerMsg2,"PAUSE! ESC TO RESUME!");
 		break;
 	}
 }
@@ -226,15 +238,26 @@ void SceneDev2::UpdateGame(float dt)
 		return;
 	}
 
-	timer = Utils::Clamp(timer - dt, 0.f, gameTime);
-	uiTimer->SetValue(timer / gameTime);
-	if (timer <= 0.f)
+	timer1 = Utils::Clamp(timer1 - dt, 0.f, gameTime);
+	timer2 = Utils::Clamp(timer2 - dt, 0.f, gameTime);
+	uiTimer1->SetValue(timer1 / gameTime);
+	uiTimer2->SetValue(timer2 / gameTime);
+	if (timer1 <= 0.f)
 	{
 		sfxTimeOut.play();
 
 		player1->OnDie();
+		SetCenterMessage(centerMsg1, "Time Over!");
+		SetStatus(Status::GameOver);
+		return;
+	}
+
+	if (timer2 <= 0.f)
+	{
+		sfxTimeOut.play();
+
 		player2->OnDie();
-		SetCenterMessage("Time Over!");
+		SetCenterMessage(centerMsg2, "Time Over!");
 		SetStatus(Status::GameOver);
 		return;
 	}
@@ -258,19 +281,19 @@ void SceneDev2::UpdatePause(float dt)
 
 void SceneDev2::OnChop(Sides side)
 {
-	Sides branchSide = tree->Chop(side);
-	if (player1->GetSide() == branchSide || player2->GetSide() == branchSide)
+	
+
+	/*Sides branchSide = tree->Chop(side);
+	if (player->GetSide() == branchSide)
 	{
 		sfxDeath.play();
 
-		player1->OnDie();
-		player2->OnDie();
+		player->OnDie();
 		SetCenterMessage("You Die!");
 		SetStatus(Status::GameOver);
 	}
 	else
 	{
-		SetScore(score + 100);
 		timer += 1.f;
-	}
+	}*/
 }
