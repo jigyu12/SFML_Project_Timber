@@ -25,6 +25,8 @@ protected:
 	Tree* tree;
 	Player* player;
 	SpriteGo* bee;
+	Player* player1;
+	Player* player2;
 
 	TextGo* centerMsg;
 	UiScore* uiScore;

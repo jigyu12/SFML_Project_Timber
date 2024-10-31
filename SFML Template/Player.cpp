@@ -83,7 +83,14 @@ void Player::SetOrigin(const sf::Vector2f& newOrigin)
 
 void Player::Init()
 {
-	spritePlayer.setTexture(TEXTURE_MGR.Get(texIdPlayer));
+	if (playerSelect == PlayerSelect::Player1)
+	{
+		spritePlayer.setTexture(TEXTURE_MGR.Get(texIdPlayer));
+	}
+	if (playerSelect == PlayerSelect::Player2)
+	{
+		spritePlayer.setTexture(TEXTURE_MGR.Get(texIdPlayer2));
+	}
 	SetOrigin(Origins::BC);
 
 	spriteAxe.setTexture(TEXTURE_MGR.Get(texIdAxe));
@@ -112,6 +119,11 @@ void Player::Reset()
 	life = 5.f;
 	SetPosition(position);
 	SetScale({ 1.f, 1.f });
+
+	if (playerSelect == PlayerSelect::Player1)
+		SetSide(Sides::Right);
+	else if (playerSelect == PlayerSelect::Player2)
+		SetSide(Sides::Left);
 }
 
 
@@ -139,7 +151,7 @@ void Player::Update(float dt)
 	if (life <= 0.f)
 	{
 		isAlive = false;
-		//È²±Ô¿µ ToDo - 2ÇÃ·¹ÀÌ¾î ·ÎÁ÷ Ãß°¡ÇØ¾ßÇÔ
+		//È²ï¿½Ô¿ï¿½ ToDo - 2ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
 		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 			dynamic_cast<SceneDev1*>(sceneGame)->OnDie(true);
 	}
@@ -225,7 +237,7 @@ void Player::Chopped(Sides side, BranchStatus branch)
 				isAlive = false;
 				if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 					dynamic_cast<SceneDev1*>(sceneGame)->OnDie(false);
-				//È²±Ô¿µ Todo - 2ÇÃ·¹ÀÌ¾î ·ÎÁ÷ Ãß°¡ÇØ¾ßÇÔ
+				//È²ï¿½Ô¿ï¿½ Todo - 2ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
 				//else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
 				//	dynamic_cast<SceneDev2*>(sceneGame)->OnDie(false);
 			}
@@ -233,7 +245,7 @@ void Player::Chopped(Sides side, BranchStatus branch)
 			{
 				if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 					dynamic_cast<SceneDev1*>(sceneGame)->AddScore(50);
-				//È²±Ô¿µ Todo - 2ÇÃ·¹ÀÌ¾î ·ÎÁ÷ Ãß°¡ÇØ¾ßÇÔ
+				//È²ï¿½Ô¿ï¿½ Todo - 2ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
 				AddLife(0.5f);
 			}
 			break;
@@ -255,7 +267,7 @@ void Player::Chopped(Sides side, BranchStatus branch)
 	{
 		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 			dynamic_cast<SceneDev1*>(sceneGame)->AddScore(100);
-		//È²±Ô¿µ Todo - 2ÇÃ·¹ÀÌ¾î ·ÎÁ÷ Ãß°¡ÇØ¾ßÇÔ
+		//È²ï¿½Ô¿ï¿½ Todo - 2ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½
 		AddLife(1.f);
 	}
 }

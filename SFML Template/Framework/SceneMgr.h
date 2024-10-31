@@ -28,6 +28,10 @@ protected:
 	void OnPostDraw();
 
 public:
+
+	int player1Select;
+	int player2Select;
+
 	void Init();
 	void Release();
 

@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "SelectCharacter.h"
 
-std::string SelectCharacter::player1Select;
-std::string SelectCharacter::player2Select;
 
 SelectCharacter::SelectCharacter()
 	:Scene(id)
@@ -56,14 +54,14 @@ void SelectCharacter::Update(float dt)
 {
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num1))
 	{
-		player1Select = "graphics/player.png";
-		player2Select = "graphics/player2.png";
+		SCENE_MGR.player1Select = 1;
+		SCENE_MGR.player2Select = 2;
 		SCENE_MGR.ChangeScene(SCENE_MGR.GetGameMode());
 	}
 	if (InputMgr::GetKeyDown(sf::Keyboard::Num2))
 	{
-		player1Select = "graphics/player2.png";
-		player2Select = "graphics/player.png";
+		SCENE_MGR.player1Select = 2;
+		SCENE_MGR.player2Select = 1;
 		SCENE_MGR.ChangeScene(SCENE_MGR.GetGameMode());
 	}
 }
