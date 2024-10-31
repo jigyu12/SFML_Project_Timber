@@ -169,8 +169,6 @@ void Player::Update(float dt)
 		{
 			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Left, this);
 		}
-
-
 		sfxChop.play();
 	}
 
@@ -188,7 +186,7 @@ void Player::Update(float dt)
 			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Right);
 		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
 		{
-			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Left, this);
+			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Right, this);
 		}
 
 		sfxChop.play();
@@ -238,8 +236,8 @@ void Player::Chopped(Sides side, BranchStatus branch)
 				if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 					dynamic_cast<SceneDev1*>(sceneGame)->OnDie(false);
 				//Ȳ�Կ� Todo - 2�÷��̾� ���� �߰��ؾ���
-				//else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
-				//	dynamic_cast<SceneDev2*>(sceneGame)->OnDie(false);
+				else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
+					dynamic_cast<SceneDev2*>(sceneGame)->OnDie(false, this);
 			}
 			else
 			{
@@ -260,6 +258,8 @@ void Player::Chopped(Sides side, BranchStatus branch)
 		case BranchStatus::BeeHive:
 			if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 				dynamic_cast<SceneDev1*>(sceneGame)->OnBeehive(side);
+			else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
+				dynamic_cast<SceneDev2*>(sceneGame)->OnBeehive(side, this);
 			break;
 		}
 	}

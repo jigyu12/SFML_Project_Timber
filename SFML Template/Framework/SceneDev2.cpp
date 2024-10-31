@@ -96,6 +96,7 @@ void SceneDev2::Enter()
 
 	TEXTURE_MGR.Load("graphics/background.png");
 	TEXTURE_MGR.Load("graphics/cloud.png");
+	TEXTURE_MGR.Load("graphics/bee.png");
 	TEXTURE_MGR.Load("graphics/tree.png");
 	TEXTURE_MGR.Load("graphics/branch.png");
 	TEXTURE_MGR.Load("graphics/log.png");
@@ -107,7 +108,7 @@ void SceneDev2::Enter()
 	SOUNDBUFFER_MGR.Load("sound/chop.wav");
 	SOUNDBUFFER_MGR.Load("sound/eat.mp3");
 	SOUNDBUFFER_MGR.Load("sound/star.mp3");
-	SOUNDBUFFER_MGR.Load("sound/bee.mp3");
+	SOUNDBUFFER_MGR.Load(sbIdBee);
 	SOUNDBUFFER_MGR.Load(sbIdDeath);
 	SOUNDBUFFER_MGR.Load(sbIdTimeOut);
 	if (SCENE_MGR.player1Select == 1)
@@ -131,6 +132,7 @@ void SceneDev2::Enter()
 	}
 	sfxDeath.setBuffer(SOUNDBUFFER_MGR.Get(sbIdDeath));
 	sfxTimeOut.setBuffer(SOUNDBUFFER_MGR.Get(sbIdTimeOut));
+	sfxBee.setBuffer(SOUNDBUFFER_MGR.Get(sbIdBee));
 
 	player1->SetSceneGame(this);
 	player2->SetSceneGame(this);
@@ -170,7 +172,7 @@ void SceneDev2::Exit()
 	SOUNDBUFFER_MGR.Unload("sound/chop.wav");
 	SOUNDBUFFER_MGR.Unload("sound/eat.mp3");
 	SOUNDBUFFER_MGR.Unload("sound/star.mp3");
-	SOUNDBUFFER_MGR.Unload("sound/bee.mp3");
+	SOUNDBUFFER_MGR.Unload(sbIdBee);
 	SOUNDBUFFER_MGR.Unload(sbIdDeath);
 	SOUNDBUFFER_MGR.Unload("sound/out_of_time.wav");
 
@@ -330,15 +332,15 @@ void SceneDev2::OnChop(Sides side, Player* player)
 {
 	if (player == player1)
 	{
-		Sides branchSide = tree1->Chop(side);
-		BranchStatus branchStat = tree1->GetLastBranchStatus();
-		player1->Chopped(branchSide, branchStat);
+		Sides branchSide1 = tree1->Chop(side);
+		BranchStatus branchStat1 = tree1->GetLastBranchStatus();
+		player1->Chopped(branchSide1, branchStat1);
 	}
 	if (player == player2)
 	{
-		Sides branchSide = tree2->Chop(side);
-		BranchStatus branchStat = tree2->GetLastBranchStatus();
-		player2->Chopped(branchSide, branchStat);
+		Sides branchSide2 = tree2->Chop(side);
+		BranchStatus branchStat2 = tree2->GetLastBranchStatus();
+		player2->Chopped(branchSide2, branchStat2);
 	}
 }
 
@@ -419,18 +421,5 @@ void SceneDev2::OnBeehive(Sides side, Player* player)
 		bee2->SetActive(true);
 	}
 
-	if (side == Sides::Left)
-	{
-		//pos += rightBranches.front()->GetOrigin();
-		pos += {-290.f, -130.f};
-	}
-	else
-	{
-		//pos -= rightBranches.front()->GetOrigin();
-		pos += {290.f, -130.f};
-	}
-	bee1->SetPosition(pos);
-	bee1->SetScale({ 0.05f,0.05f });
-	bee1->SetActive(true);
 	sfxBee.play();
 }
