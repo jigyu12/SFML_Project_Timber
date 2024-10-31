@@ -1,18 +1,20 @@
 #pragma once
 #include "GameObject.h"
 #include "EffectLog.h"
-
-class Branch;
+#include "Branch.h"
 
 class Tree : public GameObject
 {
 protected:
 	sf::Sprite tree;
-	std::list<Branch*> branches;
+	std::list<Branch*> leftBranches;
+	std::list<Branch*> rightBranches;
 
 	int branchCount = 6;
 	std::string treeTexId = "graphics/tree.png";
 	std::string branchTexId = "graphics/branch.png";
+
+	Branch::BranchStatus lastBranchStat = Branch::BranchStatus::Normal;
 
 	float brachOffsetY = 150.f;
 
@@ -39,5 +41,7 @@ public:
 	void SetPosition(const sf::Vector2f& pos) override;
 
 	void ClearEffectLog();
+
+	Branch::BranchStatus GetLastBranchStatus() const;
 };
 

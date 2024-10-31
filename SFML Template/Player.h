@@ -14,8 +14,10 @@ protected:
 	sf::Sprite spritePlayer;
 	sf::Sprite spriteAxe;
 	sf::Sprite spriteRip;
+	sf::Sprite spriteFire;
 
 	std::string sbIdChop = "sound/chop.wav";
+	std::string texIdFire = "graphics/fire.png";
 	std::string texIdPlayer = "graphics/player.png";
 	std::string texIdAxe = "graphics/axe.png";
 	std::string texIdRip = "graphics/rip.png";
@@ -30,6 +32,9 @@ protected:
 
 	bool isAlive = true;
 	bool isChppoing = false;
+	float godMode = 0.f;
+	float timeScale = 1.f;
+	float appleTimer = 0.f;
 
 	Scene* sceneGame = nullptr;
 
@@ -57,5 +62,11 @@ public:
 
 	void Player1Update(float dt);
 	void Player2Update(float dt);
+
+	float GetGodMode() const { return godMode; }
+	void SetGodMode(float time);
+	
+	float GetPlayerTimeScale() const { return timeScale; }
+	void SetPlayerTimeScale(float timescale);
 };
 

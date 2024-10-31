@@ -29,6 +29,11 @@ void SceneDev1::Init()
 		cloud->sortingOrder = 0;
 	}
 
+	TEXTURE_MGR.Load("graphics/apple.png");
+	TEXTURE_MGR.Load("graphics/goldenapple.png");
+	TEXTURE_MGR.Load("graphics/beehive.png");
+	TEXTURE_MGR.Load("graphics/fire.png");
+
 	TEXTURE_MGR.Load("graphics/tree.png");
 	TEXTURE_MGR.Load("graphics/branch.png");
 	TEXTURE_MGR.Load("graphics/player.png");
@@ -56,7 +61,7 @@ void SceneDev1::Init()
 	uiScore->text.setCharacterSize(75);
 	uiScore->text.setFillColor(sf::Color::White);
 	uiScore->SetPosition({ 30.f, 30.f });
-	
+
 	uiTimer->Set({ 500.f, 100.f }, sf::Color::Red);
 	uiTimer->SetOrigin(Origins::ML);
 	uiTimer->SetPosition({ 1920.f / 2.f - 250.f, 1080.f - 100.f });
@@ -71,6 +76,7 @@ void SceneDev1::Enter()
 	TEXTURE_MGR.Load("graphics/tree.png");
 	TEXTURE_MGR.Load("graphics/branch.png");
 	TEXTURE_MGR.Load("graphics/log.png");
+	TEXTURE_MGR.Load("graphics/fire.png");
 	TEXTURE_MGR.Load("graphics/player.png");
 	TEXTURE_MGR.Load("graphics/rip.png");
 	TEXTURE_MGR.Load("graphics/axe.png");
@@ -103,6 +109,7 @@ void SceneDev1::Exit()
 	TEXTURE_MGR.Unload("graphics/tree.png");
 	TEXTURE_MGR.Unload("graphics/branch.png");
 	TEXTURE_MGR.Unload("graphics/log.png");
+	TEXTURE_MGR.Unload("graphics/fire.png");
 	TEXTURE_MGR.Unload("graphics/player.png");
 	TEXTURE_MGR.Unload("graphics/rip.png");
 	TEXTURE_MGR.Unload("graphics/axe.png");
@@ -114,7 +121,7 @@ void SceneDev1::Exit()
 }
 
 void SceneDev1::Update(float dt)
-{ 
+{
 	Scene::Update(dt);
 
 
@@ -255,11 +262,33 @@ void SceneDev1::OnChop(Sides side)
 	Sides branchSide = tree->Chop(side);
 	if (player->GetSide() == branchSide)
 	{
-		sfxDeath.play();
+		Branch::BranchStatus currentBranch = tree->GetLastBranchStatus();
+		switch (tree->GetLastBranchStatus())
+		{
+		case Branch::BranchStatus::Normal:
+			if (player->GetGodMode() <= 0.f)
+			{
+				sfxDeath.play();
 
-		player->OnDie();
-		SetCenterMessage("You Die!");
-		SetStatus(Status::GameOver);
+				player->OnDie();
+				SetCenterMessage("You Die!");
+				SetStatus(Status::GameOver);
+			}
+			else
+			{
+				SetScore(score + 50);
+				timer += 0.5f;
+			}
+			break;
+		case Branch::BranchStatus::Apple:
+			FRAMEWORK.SetTimeScale(0.5f);
+			break;
+		case Branch::BranchStatus::GoldenApple:
+			player->SetGodMode(2.f);
+			break;
+		case Branch::BranchStatus::BeeHive:
+			break;
+		}
 	}
 	else
 	{
