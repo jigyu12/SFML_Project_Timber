@@ -61,15 +61,15 @@ void SceneDev2::Init()
 
 	Scene::Init();
 
-	tree1->SetPosition({ 1920.f / 2 / 2, 1080.f - 200.f });
-	player1_1->SetPosition({ 1920.f / 2, 1080.f - 200.f });
-	player1_2->SetPosition({ 1920.f / 2, 1080.f - 200.f });
+	tree1->SetPosition({ 1920.f * 0.25f, 1080.f - 200.f });
+	player1_1->SetPosition({ 1920.f * 0.25f, 1080.f - 200.f });
+	player1_2->SetPosition({ 1920.f * 0.25f, 1080.f - 200.f });
 	player1_1->SetActive(false);
 	player1_2->SetActive(false);
 
-	tree2->SetPosition({ 1920.f / 2 / 2 * 3, 1080.f - 200.f });
-	player2_1->SetPosition({ 1920.f / 2 / 2 * 3, 1080.f - 200.f });
-	player2_2->SetPosition({ 1920.f / 2 / 2 * 3, 1080.f - 200.f });
+	tree2->SetPosition({ 1920.f * 0.75f, 1080.f - 200.f });
+	player2_2->SetPosition({ 1920.f / 0.75f, 1080.f - 200.f });
+	player2_1->SetPosition({ 1920.f / 0.75f, 1080.f - 200.f });
 	player2_1->SetActive(false);
 	player2_2->SetActive(false);
 
