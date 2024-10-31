@@ -23,7 +23,6 @@ protected:
 	std::string sbIdStar = "sound/star.mp3";
 	std::string texIdFire = "graphics/fire.png";
 	std::string texIdPlayer = "graphics/player.png";
-	std::string texIdPlayer2 = "graphics/player2.png";
 	std::string texIdAxe = "graphics/axe.png";
 	std::string texIdRip = "graphics/rip.png";
 
@@ -50,7 +49,7 @@ protected:
 public:
 	Player(PlayerSelect select, const std::string& name = "");
 	virtual ~Player() = default;
-
+	void SetTexture(const std::string& texid);
 	Sides GetSide() const { return side; }
 	void SetSide(Sides s);
 

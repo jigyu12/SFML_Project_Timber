@@ -45,10 +45,8 @@ void SceneDev2::Init()
 
 	tree1 = AddGo(new Tree("Tree1"));
 	tree2 = AddGo(new Tree("Tree2"));
-	player1_1 = AddGo(new Player(PlayerSelect::Player1, "Player1"));
-	player2_1 = AddGo(new Player(PlayerSelect::Player2, "Player2"));
-	player1_2 = AddGo(new Player(PlayerSelect::Player2, "Player1"));
-	player2_2 = AddGo(new Player(PlayerSelect::Player1, "Player2"));
+	player1 = AddGo(new Player(PlayerSelect::Player1, "Player1"));
+	player2 = AddGo(new Player(PlayerSelect::Player2, "Player2"));
 
 	centerMsg1 = AddGo(new TextGo("fonts/KOMIKAP_.ttf", "Center Message1"));
 	centerMsg1->sortingLayer = SortingLayers::UI;
@@ -62,16 +60,10 @@ void SceneDev2::Init()
 	Scene::Init();
 
 	tree1->SetPosition({ 1920.f * 0.25f, 1080.f - 200.f });
-	player1_1->SetPosition({ 1920.f * 0.25f, 1080.f - 200.f });
-	player1_2->SetPosition({ 1920.f * 0.25f, 1080.f - 200.f });
-	player1_1->SetActive(false);
-	player1_2->SetActive(false);
+	player1->SetPosition({ 1920.f * 0.25f, 1080.f - 200.f });
 
 	tree2->SetPosition({ 1920.f * 0.75f, 1080.f - 200.f });
-	player2_1->SetPosition({ 1920.f * 0.75f, 1080.f - 200.f });
-	player2_2->SetPosition({ 1920.f * 0.75f, 1080.f - 200.f });
-	player2_1->SetActive(false);
-	player2_2->SetActive(false);
+	player2->SetPosition({ 1920.f * 0.75f, 1080.f - 200.f });
 
 	centerMsg1->text.setCharacterSize(50);
 	centerMsg1->text.setFillColor(sf::Color::White);
@@ -115,28 +107,20 @@ void SceneDev2::Enter()
 	isPlayer1GameOver = false;
 	isPlayer2GameOver = false;
 
-	if (SCENE_MGR.player1Select == 1)
-	{
-		player1_1->SetActive(true);
-		player2_1->SetActive(true);
-		player1_2->SetActive(false);
-		player2_2->SetActive(false);
-		player1 = player1_1;
-		player2 = player2_1;
-		
-	}
-	if (SCENE_MGR.player1Select == 2)
-	{
-		player1_1->SetActive(false);
-		player2_1->SetActive(false);
-		player1_2->SetActive(true);
-		player2_2->SetActive(true);
-		player1 = player1_2;
-		player2 = player2_2;
-	}
 	sfxDeath.setBuffer(SOUNDBUFFER_MGR.Get(sbIdDeath));
 	sfxTimeOut.setBuffer(SOUNDBUFFER_MGR.Get(sbIdTimeOut));
 	sfxBee.setBuffer(SOUNDBUFFER_MGR.Get(sbIdBee));
+
+	if (SCENE_MGR.player1sprite == PlayerSelect::Player1)
+	{
+		player1->SetTexture("graphics/player.png");
+		player2->SetTexture("graphics/player2.png");
+	}
+	else if (SCENE_MGR.player1sprite == PlayerSelect::Player2)
+	{
+		player1->SetTexture("graphics/player2.png");
+		player2->SetTexture("graphics/player.png");
+	}
 
 	player1->SetSceneGame(this);
 	player2->SetSceneGame(this);

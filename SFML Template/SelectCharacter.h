@@ -10,6 +10,7 @@ protected:
 	TextGo* gameMessage;
 	SpriteGo* player;
 	SpriteGo* player2;
+	
 
 	
 

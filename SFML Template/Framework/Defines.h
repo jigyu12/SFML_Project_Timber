@@ -13,7 +13,7 @@ enum class SceneIds
 	None = -1,
 	MainTitle,
 	SelectGameMode,
-	SelectCharacter,
+	PraticePage,
 	Dev1,
 	Dev2,
 	Count,

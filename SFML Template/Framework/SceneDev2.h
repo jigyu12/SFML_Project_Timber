@@ -25,10 +25,6 @@ protected:
 	Tree* tree1;
 	Tree* tree2;
 	Player* player1;
-	Player* player1_1;
-	Player* player2_1;
-	Player* player1_2;
-	Player* player2_2;
 	Player* player2;
 	SpriteGo* bee1;
 	SpriteGo* bee2;
