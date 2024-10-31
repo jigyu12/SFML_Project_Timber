@@ -6,6 +6,7 @@ class Player;
 class TextGo;
 class UiScore;
 class UiTimebar;
+class SpriteGo;
 
 class SceneDev1 : public Scene
 {
@@ -23,6 +24,7 @@ protected:
 
 	Tree* tree;
 	Player* player;
+	SpriteGo* bee;
 
 	TextGo* centerMsg;
 	UiScore* uiScore;
@@ -34,8 +36,11 @@ protected:
 
 	sf::Sound sfxDeath;
 	sf::Sound sfxTimeOut;
+	sf::Sound sfxBee;
 
-	std::string sbIdDeath = "sound/death.wav";
+	std::string sbIdDeath = "sound/death2.wav";
+	std::string sbIdBee = "sound/bee.mp3";
+	//std::string sbIdDeath = "sound/death.wav";
 	std::string sbIdTimeOut = "sound/out_of_time.wav";
 
 public:
@@ -64,6 +69,7 @@ public:
 
 	void OnChop(Sides side);
 	void OnDie(bool isTimeOver);
+	void OnBeehive(Sides side);
 
 };
 
