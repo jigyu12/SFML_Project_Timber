@@ -29,12 +29,20 @@ void InputMgr::UpdateEvent(const sf::Event& ev)
 	switch (ev.type)
 	{
 	case sf::Event::KeyPressed:
+		if (ev.key.code < 0)
+		{
+			return;
+		}
 		if (inputs[ev.key.code] == KeyStatus::None)
 		{
 			inputs[ev.key.code] = KeyStatus::Down;
 		}
 		break;
 	case sf::Event::KeyReleased:
+		if (ev.key.code < 0)
+		{
+			return;
+		}
 		inputs[ev.key.code] = KeyStatus::Up;
 		break;
 	case sf::Event::MouseButtonPressed:

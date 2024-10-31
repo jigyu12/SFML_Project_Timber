@@ -9,11 +9,15 @@ class SceneMgr : public Singleton<SceneMgr>
 protected:
 	std::vector<Scene*> scenes;
 
-	SceneIds startScene = SceneIds::Dev1;
+	SceneIds startScene = SceneIds::MainTitle;
 	SceneIds currentScene;
+
+	SceneIds gameMode = SceneIds::None;
 
 	SceneIds nextScene = SceneIds::None;
 
+	bool isGaming = false;
+	
 	SceneMgr() = default;
 	virtual ~SceneMgr() = default;
 
@@ -24,6 +28,9 @@ protected:
 	void OnPostDraw();
 
 public:
+	
+	PlayerSelect player1sprite;
+
 	void Init();
 	void Release();
 
@@ -35,6 +42,12 @@ public:
 	void LateUpdate(float dt);
 
 	void Draw(sf::RenderWindow& window);
+
+	void SetGameMode(const SceneIds& mode) { gameMode = mode; }
+	SceneIds GetGameMode() const { return gameMode; }
+
+	void SetIsGaming(const bool gaming) { isGaming = gaming; }
+	bool GetIsGaming() const { return isGaming; }
 };
 
 

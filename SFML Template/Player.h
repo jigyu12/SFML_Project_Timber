@@ -2,18 +2,26 @@
 #include "GameObject.h"
 
 class SceneDev1;
+class SceneDev2;
 
 class Player : public GameObject
 {
 protected:
 	sf::Sound sfxChop;
+	sf::Sound sfxEat;
+	sf::Sound sfxStar;
 
+	PlayerSelect playerSelect = PlayerSelect::None;
 
 	sf::Sprite spritePlayer;
 	sf::Sprite spriteAxe;
 	sf::Sprite spriteRip;
+	sf::Sprite spriteFire;
 
 	std::string sbIdChop = "sound/chop.wav";
+	std::string sbIdEat = "sound/eat.mp3";
+	std::string sbIdStar = "sound/star.mp3";
+	std::string texIdFire = "graphics/fire.png";
 	std::string texIdPlayer = "graphics/player.png";
 	std::string texIdAxe = "graphics/axe.png";
 	std::string texIdRip = "graphics/rip.png";
@@ -28,16 +36,22 @@ protected:
 
 	bool isAlive = true;
 	bool isChppoing = false;
+	float godMode = 0.f;
+	float timeScale = 1.f;
+	float appleTimer = 0.f;
+	float life = 0.f;
 
-	SceneDev1* sceneGame = nullptr;
+	sf::Keyboard::Key LeftKey;
+	sf::Keyboard::Key RightKey;
+
+	Scene* sceneGame = nullptr;
 
 public:
-	Player(const std::string& name = "");
+	Player(PlayerSelect select, const std::string& name = "");
 	virtual ~Player() = default;
-
+	void SetTexture(const std::string& texid);
 	Sides GetSide() const { return side; }
 	void SetSide(Sides s);
-	void OnDie();
 
 	void SetPosition(const sf::Vector2f& pos) override;
 	void SetScale(const sf::Vector2f& scale) override;
@@ -51,6 +65,17 @@ public:
 	void Update(float dt) override;
 	void Draw(sf::RenderWindow& window)  override;
 
-	void SetSceneGame(SceneDev1* scene);
+	void SetSceneGame(Scene* scene);
+
+	void Chopped(Sides side, BranchStatus branch);
+
+	float GetGodMode() const { return godMode; }
+	void SetGodMode(float time);
+	
+	float GetPlayerTimeScale() const { return timeScale; }
+	void SetApple(float timescale);
+
+	float GetLife() const { return life; }
+	void AddLife(float iLife);
 };
 

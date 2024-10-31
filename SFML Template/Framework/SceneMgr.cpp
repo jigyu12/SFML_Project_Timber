@@ -2,10 +2,15 @@
 #include "SceneMgr.h"
 #include "SceneDev1.h"
 #include "SceneDev2.h"
-
-
+#include "MainTitleScene.h"
+#include "SelectGameMode.h"
+#include "SelectCharacter.h"
 void SceneMgr::Init()
 {
+	
+	scenes.push_back(new MainTitleScene());
+	scenes.push_back(new SelectGameMode());
+	scenes.push_back(new SelectCharacter());
 	scenes.push_back(new SceneDev1());	
 	scenes.push_back(new SceneDev2());
 
@@ -22,6 +27,10 @@ void SceneMgr::Release()
 {
 	for (auto scene : scenes)
 	{
+		if (currentScene == scene->getId())
+		{
+			scene->Exit();
+		}
 		scene->Release();
 		delete scene;
 	}

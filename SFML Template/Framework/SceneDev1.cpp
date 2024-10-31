@@ -28,16 +28,23 @@ void SceneDev1::Init()
 		cloud->sortingLayer = SortingLayers::Background;
 		cloud->sortingOrder = 0;
 	}
+	bee = AddGo(new SpriteGo("graphics/bee.png", "bee"));
+
+	TEXTURE_MGR.Load("graphics/apple.png");
+	TEXTURE_MGR.Load("graphics/goldenapple.png");
+	TEXTURE_MGR.Load("graphics/beehive.png");
+	TEXTURE_MGR.Load("graphics/fire.png");
 
 	TEXTURE_MGR.Load("graphics/tree.png");
 	TEXTURE_MGR.Load("graphics/branch.png");
 	TEXTURE_MGR.Load("graphics/player.png");
+	TEXTURE_MGR.Load("graphics/player2.png");
 	TEXTURE_MGR.Load("graphics/rip.png");
 	TEXTURE_MGR.Load("graphics/axe.png");
 
 	tree = AddGo(new Tree("Tree"));
-	player = AddGo(new Player("Player"));
-
+	
+	player = AddGo(new Player(PlayerSelect::Player1, "Player1"));
 
 	centerMsg = AddGo(new TextGo("fonts/KOMIKAP_.ttf", "Center Message"));
 	centerMsg->sortingLayer = SortingLayers::UI;
@@ -48,7 +55,8 @@ void SceneDev1::Init()
 	Scene::Init();
 
 	tree->SetPosition({ 1920.f / 2, 1080.f - 200.f });
-	player->SetPosition({ 1920.f / 2, 1080.f - 200.f });
+
+	player->SetPosition({1920.f / 2, 1080.f - 200.f});
 
 	centerMsg->text.setCharacterSize(100);
 	centerMsg->text.setFillColor(sf::Color::White);
@@ -57,7 +65,7 @@ void SceneDev1::Init()
 	uiScore->text.setCharacterSize(75);
 	uiScore->text.setFillColor(sf::Color::White);
 	uiScore->SetPosition({ 30.f, 30.f });
-	
+
 	uiTimer->Set({ 500.f, 100.f }, sf::Color::Red);
 	uiTimer->SetOrigin(Origins::ML);
 	uiTimer->SetPosition({ 1920.f / 2.f - 250.f, 1080.f - 100.f });
@@ -65,22 +73,40 @@ void SceneDev1::Init()
 
 void SceneDev1::Enter()
 {
+	std::cout << "SceneDev1::Enter()" << std::endl;
+
 	TEXTURE_MGR.Load("graphics/background.png");
 	TEXTURE_MGR.Load("graphics/cloud.png");
 	TEXTURE_MGR.Load("graphics/tree.png");
 	TEXTURE_MGR.Load("graphics/branch.png");
 	TEXTURE_MGR.Load("graphics/log.png");
+	TEXTURE_MGR.Load("graphics/fire.png");
 	TEXTURE_MGR.Load("graphics/player.png");
+	TEXTURE_MGR.Load("graphics/player2.png");
 	TEXTURE_MGR.Load("graphics/rip.png");
+	TEXTURE_MGR.Load("graphics/bee.png");
 	TEXTURE_MGR.Load("graphics/axe.png");
 	FONT_MGR.Load("fonts/KOMIKAP_.ttf");
 	SOUNDBUFFER_MGR.Load("sound/chop.wav");
+	SOUNDBUFFER_MGR.Load("sound/eat.mp3");
+	SOUNDBUFFER_MGR.Load("sound/star.mp3");
+	SOUNDBUFFER_MGR.Load("sound/bee.mp3");
 	SOUNDBUFFER_MGR.Load(sbIdDeath);
 	SOUNDBUFFER_MGR.Load(sbIdTimeOut);
 
 	sfxDeath.setBuffer(SOUNDBUFFER_MGR.Get(sbIdDeath));
 	sfxTimeOut.setBuffer(SOUNDBUFFER_MGR.Get(sbIdTimeOut));
+	sfxBee.setBuffer(SOUNDBUFFER_MGR.Get(sbIdBee));
+	bee->SetOrigin(Origins::MC);
+	bee->sortingLayer = SortingLayers::Foreground;
+	bee->sortingOrder = 10;
 
+	if (SCENE_MGR.player1sprite == PlayerSelect::Player2)
+	{
+		player->SetTexture("graphics/player2.png");
+	}
+
+	player->SetActive(true);
 	player->SetSceneGame(this);
 
 	Scene::Enter();
@@ -102,25 +128,24 @@ void SceneDev1::Exit()
 	TEXTURE_MGR.Unload("graphics/tree.png");
 	TEXTURE_MGR.Unload("graphics/branch.png");
 	TEXTURE_MGR.Unload("graphics/log.png");
+	TEXTURE_MGR.Unload("graphics/fire.png");
 	TEXTURE_MGR.Unload("graphics/player.png");
+	TEXTURE_MGR.Unload("graphics/player2.png");
 	TEXTURE_MGR.Unload("graphics/rip.png");
 	TEXTURE_MGR.Unload("graphics/axe.png");
 	FONT_MGR.Unload("fonts/KOMIKAP_.ttf");
 	SOUNDBUFFER_MGR.Unload("sound/chop.wav");
-	SOUNDBUFFER_MGR.Unload("sound/death.wav");
-	SOUNDBUFFER_MGR.Unload("sound/out_of_time.wav");
+	SOUNDBUFFER_MGR.Unload(sbIdDeath);
+	SOUNDBUFFER_MGR.Unload(sbIdTimeOut);
+	SOUNDBUFFER_MGR.Unload("sound/eat.mp3");
+	SOUNDBUFFER_MGR.Unload("sound/star.mp3");
+	SOUNDBUFFER_MGR.Unload("sound/bee.mp3");
 
 }
 
 void SceneDev1::Update(float dt)
-{ 
+{
 	Scene::Update(dt);
-
-
-	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
-	{
-		SCENE_MGR.ChangeScene(SceneIds::Dev2);
-	}
 
 	switch (currentStatus)
 	{
@@ -161,6 +186,12 @@ void SceneDev1::SetScore(int score)
 	uiScore->SetScore(this->score);
 }
 
+void SceneDev1::AddScore(int score)
+{
+	this->score += score;
+	uiScore->SetScore(this->score);
+}
+
 void SceneDev1::SetStatus(Status newStatus)
 {
 	Status prevStatus = currentStatus;
@@ -178,6 +209,7 @@ void SceneDev1::SetStatus(Status newStatus)
 		uiTimer->SetValue(1.f);
 		break;
 	case SceneDev1::Status::Game:
+		SCENE_MGR.SetIsGaming(true);
 		if (prevStatus == Status::GameOver)
 		{
 			score = 0;
@@ -195,11 +227,15 @@ void SceneDev1::SetStatus(Status newStatus)
 	case SceneDev1::Status::GameOver:
 		FRAMEWORK.SetTimeScale(0.f);
 		SetVisibleCenterMessage(true);
+
+		SCENE_MGR.SetIsGaming(false);
 		break;
 	case SceneDev1::Status::Pause:
 		FRAMEWORK.SetTimeScale(0.f);
 		SetVisibleCenterMessage(true);
 		SetCenterMessage("PAUSE! ESC TO RESUME!");
+
+		SCENE_MGR.SetIsGaming(false);
 		break;
 	}
 }
@@ -220,16 +256,14 @@ void SceneDev1::UpdateGame(float dt)
 		return;
 	}
 
-	timer = Utils::Clamp(timer - dt, 0.f, gameTime);
-	uiTimer->SetValue(timer / gameTime);
-	if (timer <= 0.f)
-	{
-		sfxTimeOut.play();
 
-		player->OnDie();
-		SetCenterMessage("Time Over!");
-		SetStatus(Status::GameOver);
-		return;
+	timer = player->GetLife();
+	uiTimer->SetValue(timer / gameTime);
+
+	bee->SetScale(bee->GetScale() * (1.f + dt * 3.f));
+	if (bee->GetScale().x > 30.f)
+	{
+		bee->SetActive(false);
 	}
 }
 
@@ -237,7 +271,7 @@ void SceneDev1::UpdateGameOver(float dt)
 {
 	if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
-		SetStatus(Status::Game);
+		SCENE_MGR.ChangeScene(SceneIds::MainTitle);
 	}
 }
 
@@ -252,17 +286,40 @@ void SceneDev1::UpdatePause(float dt)
 void SceneDev1::OnChop(Sides side)
 {
 	Sides branchSide = tree->Chop(side);
-	if (player->GetSide() == branchSide)
-	{
-		sfxDeath.play();
+	BranchStatus branchStat = tree->GetLastBranchStatus();
+	player->Chopped(branchSide, branchStat);
 
-		player->OnDie();
-		SetCenterMessage("You Die!");
+}
+
+void SceneDev1::OnDie(bool isTimeOver)
+{
+	if (isTimeOver)
+	{
+		SetCenterMessage("           Time Over!\nPress Enter to MainTitle");
 		SetStatus(Status::GameOver);
+		sfxTimeOut.play();
+		return;
+	}
+	SetCenterMessage("           You Die!\nPress Enter to MainTitle");
+	SetStatus(Status::GameOver);
+	sfxDeath.play();
+}
+
+void SceneDev1::OnBeehive(Sides side)
+{
+	sf::Vector2f pos = tree->GetPosition();
+	if (side == Sides::Left)
+	{
+		//pos += rightBranches.front()->GetOrigin();
+		pos += {-290.f, -130.f};
 	}
 	else
 	{
-		SetScore(score + 100);
-		timer += 1.f;
+		//pos -= rightBranches.front()->GetOrigin();
+		pos += {290.f, -130.f};
 	}
+	bee->SetPosition(pos);
+	bee->SetScale({ 0.05f,0.05f });
+	bee->SetActive(true);
+	sfxBee.play();
 }

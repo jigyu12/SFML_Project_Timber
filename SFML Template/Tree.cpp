@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Tree.h"
-#include "Branch.h"
 #include "EffectLog.h"
 #include "Scene.h"
 
@@ -14,14 +13,6 @@ Tree::Tree(const std::string& name)
 Tree::~Tree()
 {
 	Release();
-}
-
-Sides Tree::RandomSide() const
-{
-	int rand = Utils::RandomRange(0, 2);
-	if (rand > 1)
-		return Sides::None;
-	return (Sides)rand;
 }
 
 void Tree::Init()
@@ -41,8 +32,13 @@ void Tree::Init()
 		Branch* branch = new Branch(branchTexId);
 		branch->SetOrigin(orginBranch);
 		branch->Init();
-		branch->SetSide(RandomSide());
-		branches.push_back(branch);
+		branch->SetSide(Sides::Left);
+		leftBranches.push_back(branch);
+		branch = new Branch(branchTexId);
+		branch->SetOrigin(orginBranch);
+		branch->Init();
+		branch->SetSide(Sides::Right);
+		rightBranches.push_back(branch);
 	}
 }
 
@@ -55,30 +51,59 @@ void Tree::Release()
 	}
 	logEffects.clear();
 
-	for (auto branch : branches)
+	for (auto branch : leftBranches)
 	{
 		branch->Release();
 		delete branch;
 	}
-	branches.clear();
+	leftBranches.clear();
+	for (auto branch : rightBranches)
+	{
+		branch->Release();
+		delete branch;
+	}
+	rightBranches.clear();
 }
 
 
 void Tree::Reset()
 {
 	tree.setTexture(TEXTURE_MGR.Get(treeTexId), true);
-	for (auto branch : branches)
+
+	auto leftbranch = leftBranches.begin();
+	auto rightbranch = rightBranches.begin();
+
+	while (leftbranch != leftBranches.end() || rightbranch != rightBranches.end())
 	{
-		branch->Reset();
+		(*leftbranch)->Reset();
+		(*leftbranch)->RandStatus();
+		(*rightbranch)->Reset();
+		(*rightbranch)->RandStatus();
+
+		if (((*leftbranch)->GetStatus() == BranchStatus::Normal || (*leftbranch)->GetStatus() == BranchStatus::BeeHive)
+			&& (((*rightbranch)->GetStatus() == BranchStatus::Normal) || (*rightbranch)->GetStatus() == BranchStatus::BeeHive))
+		{
+			Utils::RandomRange(0, 1) == 0 ? (*leftbranch)->SetActive(false) : (*rightbranch)->SetActive(false);
+		}
+
+		++leftbranch;
+		++rightbranch;
 	}
+
+	auto lastBranch = leftBranches.front();
+	lastBranch->SetActive(false);
+	lastBranch = rightBranches.front();
+	lastBranch->SetActive(false);
 	UpdateBranchPos();
-	auto lastBranch = branches.front();
-	lastBranch->SetSide(Sides::None);
 }
 
 void Tree::Update(float dt)
 {
-	for (auto branch : branches)
+	for (auto branch : leftBranches)
+	{
+		branch->Update(dt);
+	}
+	for (auto branch : rightBranches)
 	{
 		branch->Update(dt);
 	}
@@ -103,7 +128,14 @@ void Tree::Update(float dt)
 void Tree::Draw(sf::RenderWindow& window)
 {
 	window.draw(tree);
-	for (auto branch : branches)
+	for (auto branch : leftBranches)
+	{
+		if (branch->IsActive())
+		{
+			branch->Draw(window);
+		}
+	}
+	for (auto branch : rightBranches)
 	{
 		if (branch->IsActive())
 		{
@@ -129,8 +161,22 @@ void Tree::ClearEffectLog()
 	logEffects.clear();
 }
 
+BranchStatus Tree::GetLastBranchStatus() const
+{
+	return lastBranchStat;
+}
+
+Sides Tree::RandomSide() const
+{
+	return Sides();
+}
+
 Sides Tree::Chop(Sides side)
 {
+	Branch* leftTemp = leftBranches.front();
+	Branch* rightTemp = rightBranches.front();
+	Sides sides = Sides::Left;
+
 	if (side != Sides::None)
 	{
 		EffectLog* effect = effectLogPool.Take();
@@ -141,18 +187,44 @@ Sides Tree::Chop(Sides side)
 		logEffects.push_back(effect);
 	}
 
-	Branch* temp = branches.front();
-	branches.pop_front();
-	temp->SetSide(RandomSide());
-	branches.push_back(temp);
+	leftBranches.pop_front();
+	leftTemp->RandStatus();
+	leftBranches.push_back(leftTemp);
+	rightBranches.pop_front();
+	rightTemp->RandStatus();
+	rightBranches.push_back(rightTemp);
+	if ((leftTemp->GetStatus() == BranchStatus::Normal || leftTemp->GetStatus() == BranchStatus::BeeHive)
+		&& (rightTemp->GetStatus() == BranchStatus::Normal || rightTemp->GetStatus() == BranchStatus::BeeHive))
+	{
+		Utils::RandomRange(0, 1) == 0 ? leftTemp->SetActive(false) : rightTemp->SetActive(false);
+	}
+
 	UpdateBranchPos();
-	return branches.front()->GetSide();
+	leftTemp = leftBranches.front();
+	rightTemp = rightBranches.front();
+	if (side == Sides::Left)
+	{
+		lastBranchStat = leftTemp->GetStatus();
+		sides = leftTemp->IsActive() ? Sides::Left : Sides::Right;
+	}
+	else if (side == Sides::Right)
+	{
+		lastBranchStat = rightTemp->GetStatus();
+		sides = rightTemp->IsActive() ? Sides::Right : Sides::Left;
+	}
+	return sides;
 }
 
 void Tree::UpdateBranchPos()
 {
 	sf::Vector2f pos = position;
-	for (auto branch : branches)
+	for (auto branch : leftBranches)
+	{
+		pos.y -= brachOffsetY;
+		branch->SetPosition(pos);
+	}
+	pos = position;
+	for (auto branch : rightBranches)
 	{
 		pos.y -= brachOffsetY;
 		branch->SetPosition(pos);

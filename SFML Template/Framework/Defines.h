@@ -11,6 +11,9 @@ enum class SortingLayers
 enum class SceneIds
 {
 	None = -1,
+	MainTitle,
+	SelectGameMode,
+	SelectCharacter,
 	Dev1,
 	Dev2,
 	Count,
@@ -30,5 +33,21 @@ enum class Sides
 {
 	Left,
 	Right,
+	None,
+};
+
+enum class BranchStatus
+{
+	Normal,
+	Apple,
+	GoldenApple,
+	BeeHive,
+	BadApple,
+};
+
+enum class PlayerSelect
+{
+	Player1,
+	Player2,
 	None,
 };

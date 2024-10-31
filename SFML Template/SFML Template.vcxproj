@@ -152,6 +152,7 @@
     <ClCompile Include="Framework\Framework.cpp" />
     <ClCompile Include="Framework\GameObject.cpp" />
     <ClCompile Include="Framework\InputMgr.cpp" />
+    <ClCompile Include="MainTitleScene.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Framework\Scene.cpp" />
     <ClCompile Include="Framework\SceneDev1.cpp" />
@@ -163,6 +164,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Framework\TextGo.cpp" />
+    <ClCompile Include="SelectCharacter.cpp" />
+    <ClCompile Include="SelectGameMode.cpp" />
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="UiScore.cpp" />
     <ClCompile Include="UiTimebar.cpp" />
@@ -177,6 +180,7 @@
     <ClInclude Include="Framework\GameObject.h" />
     <ClInclude Include="Framework\InputMgr.h" />
     <ClInclude Include="Framework\ObjectPool.h" />
+    <ClInclude Include="MainTitleScene.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Framework\ResourceMgr.h" />
     <ClInclude Include="Framework\Scene.h" />
@@ -187,6 +191,8 @@
     <ClInclude Include="Framework\SpriteGo.h" />
     <ClInclude Include="Framework\stdafx.h" />
     <ClInclude Include="Framework\TextGo.h" />
+    <ClInclude Include="SelectCharacter.h" />
+    <ClInclude Include="SelectGameMode.h" />
     <ClInclude Include="Tree.h" />
     <ClInclude Include="UiScore.h" />
     <ClInclude Include="UiTimebar.h" />
