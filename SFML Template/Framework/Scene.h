@@ -7,7 +7,7 @@ protected:
 
 	std::list<GameObject*> addGameObjects;
 	std::list<GameObject*> removeGameObjects;
-
+	
 public:
 	Scene(SceneIds id);
 	virtual ~Scene() = default;
@@ -40,6 +40,7 @@ public:
 	void ApplyRemoveGO();
 
 	const SceneIds& getId() { return id; }
+
 
 };
 

@@ -124,12 +124,6 @@ void SceneDev1::Update(float dt)
 {
 	Scene::Update(dt);
 
-
-	if (InputMgr::GetKeyDown(sf::Keyboard::Space))
-	{
-		SCENE_MGR.ChangeScene(SceneIds::Dev2);
-	}
-
 	switch (currentStatus)
 	{
 	case SceneDev1::Status::Awake:
@@ -192,6 +186,7 @@ void SceneDev1::SetStatus(Status newStatus)
 		uiTimer->SetValue(1.f);
 		break;
 	case SceneDev1::Status::Game:
+		SCENE_MGR.SetIsGaming(true);
 		if (prevStatus == Status::GameOver)
 		{
 			score = 0;
@@ -209,11 +204,15 @@ void SceneDev1::SetStatus(Status newStatus)
 	case SceneDev1::Status::GameOver:
 		FRAMEWORK.SetTimeScale(0.f);
 		SetVisibleCenterMessage(true);
+
+		SCENE_MGR.SetIsGaming(false);
 		break;
 	case SceneDev1::Status::Pause:
 		FRAMEWORK.SetTimeScale(0.f);
 		SetVisibleCenterMessage(true);
 		SetCenterMessage("PAUSE! ESC TO RESUME!");
+
+		SCENE_MGR.SetIsGaming(false);
 		break;
 	}
 }
@@ -234,13 +233,14 @@ void SceneDev1::UpdateGame(float dt)
 		return;
 	}
 
+
 	timer = Utils::Clamp(timer - dt, 0.f, gameTime);
 	uiTimer->SetValue(timer / gameTime);
 	if (timer <= 0.f)
 	{
 		sfxTimeOut.play();
 
-		player->OnDie();
+		OnDie(true);
 		return;
 	}
 }
@@ -249,7 +249,7 @@ void SceneDev1::UpdateGameOver(float dt)
 {
 	if (InputMgr::GetKeyDown(sf::Keyboard::Enter))
 	{
-		SetStatus(Status::Game);
+		SCENE_MGR.ChangeScene(SceneIds::MainTitle);
 	}
 }
 
@@ -276,7 +276,7 @@ void SceneDev1::OnChop(Sides side)
 			if (player->GetGodMode() <= 0.f)
 			{
 				sfxDeath.play();
-				player->OnDie();
+				OnDie(false);
 			}
 			else
 			{
@@ -305,13 +305,13 @@ void SceneDev1::OnDie(bool isTimeOver)
 {
 	if (isTimeOver)
 	{
-		SetCenterMessage("Time Over!");
+		SetCenterMessage("           Time Over!\nPress Enter to MainTitle");
 		SetStatus(Status::GameOver);
 		sfxDeath.play();
 		return;
 	}
 	
-	SetCenterMessage("You Die!");
+	SetCenterMessage("           You Die!\nPress Enter to MainTitle");
 	SetStatus(Status::GameOver);
 	sfxTimeOut.play();
 }

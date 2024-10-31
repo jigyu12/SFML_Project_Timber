@@ -49,14 +49,6 @@ void Player::SetPosition(const sf::Vector2f& pos)
 	SetSide(side);
 }
 
-void Player::OnDie()
-{
-	isAlive = false;
-	isChppoing = false;
-
-
-}
-
 void Player::SetScale(const sf::Vector2f& scale)
 {
 	this->scale = scale;
@@ -117,11 +109,6 @@ void Player::Reset()
 	isChppoing = false;
 	SetPosition(position);
 	SetScale({ 1.f, 1.f });
-
-	if(playerSelect == PlayerSelect::Player1)
-		SetSide(Sides::Right);
-	else if (playerSelect == PlayerSelect::Player2)
-		SetSide(Sides::Left);
 }
 
 
@@ -132,7 +119,7 @@ void Player::Release()
 
 void Player::Update(float dt)
 {
-	if (!isAlive)
+	if (!isAlive || !SCENE_MGR.GetIsGaming())
 		return;
 
 	appleTimer = Utils::Clamp(appleTimer - dt, 0.f, 4.f);
@@ -151,7 +138,13 @@ void Player::Update(float dt)
 		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Left);
 		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
-			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Left);
+		{
+			if (name == "Player1")
+				dynamic_cast<SceneDev2*>(sceneGame)->Player1Chopping(Sides::Left);
+			else if(name == "Player2")
+				dynamic_cast<SceneDev2*>(sceneGame)->Player2Chopping(Sides::Left);
+		}
+			
 
 		sfxChop.play();
 	}
@@ -169,7 +162,12 @@ void Player::Update(float dt)
 		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Right);
 		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
-			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Right);
+		{
+			if (name == "Player1")
+				dynamic_cast<SceneDev2*>(sceneGame)->Player1Chopping(Sides::Left);
+			else if (name == "Player2")
+				dynamic_cast<SceneDev2*>(sceneGame)->Player2Chopping(Sides::Left);
+		}
 
 		sfxChop.play();
 	}
