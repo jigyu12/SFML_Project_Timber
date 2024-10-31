@@ -28,6 +28,13 @@ void SceneDev2::Init()
 		cloud->sortingLayer = SortingLayers::Background;
 		cloud->sortingOrder = 0;
 	}
+	bee1 = AddGo(new SpriteGo("graphics/bee.png", "b1"));
+	bee2 = AddGo(new SpriteGo("graphics/bee.png", "b2"));
+
+	TEXTURE_MGR.Load("graphics/apple.png");
+	TEXTURE_MGR.Load("graphics/goldenapple.png");
+	TEXTURE_MGR.Load("graphics/beehive.png");
+	TEXTURE_MGR.Load("graphics/fire.png");
 
 	TEXTURE_MGR.Load("graphics/tree.png");
 	TEXTURE_MGR.Load("graphics/branch.png");
@@ -88,6 +95,9 @@ void SceneDev2::Enter()
 	TEXTURE_MGR.Load("graphics/axe.png");
 	FONT_MGR.Load("fonts/KOMIKAP_.ttf");
 	SOUNDBUFFER_MGR.Load("sound/chop.wav");
+	SOUNDBUFFER_MGR.Load("sound/eat.mp3");
+	SOUNDBUFFER_MGR.Load("sound/star.mp3");
+	SOUNDBUFFER_MGR.Load("sound/bee.mp3");
 	SOUNDBUFFER_MGR.Load(sbIdDeath);
 	SOUNDBUFFER_MGR.Load(sbIdTimeOut);
 
@@ -96,6 +106,12 @@ void SceneDev2::Enter()
 
 	player1->SetSceneGame(this);
 	player2->SetSceneGame(this);
+	bee1->SetOrigin(Origins::MC);
+	bee1->sortingLayer = SortingLayers::Foreground;
+	bee1->sortingOrder = 10;
+	bee2->SetOrigin(Origins::MC);
+	bee2->sortingLayer = SortingLayers::Foreground;
+	bee2->sortingOrder = 10;
 
 	Scene::Enter();
 
@@ -123,7 +139,10 @@ void SceneDev2::Exit()
 	TEXTURE_MGR.Unload("graphics/axe.png");
 	FONT_MGR.Unload("fonts/KOMIKAP_.ttf");
 	SOUNDBUFFER_MGR.Unload("sound/chop.wav");
-	SOUNDBUFFER_MGR.Unload("sound/death.wav");
+	SOUNDBUFFER_MGR.Unload("sound/eat.mp3");
+	SOUNDBUFFER_MGR.Unload("sound/star.mp3");
+	SOUNDBUFFER_MGR.Unload("sound/bee.mp3");
+	SOUNDBUFFER_MGR.Unload(sbIdDeath);
 	SOUNDBUFFER_MGR.Unload("sound/out_of_time.wav");
 
 }
@@ -199,10 +218,10 @@ void SceneDev2::SetStatus(Status newStatus)
 			tree2->Reset();
 		}
 		FRAMEWORK.SetTimeScale(1.f);
-		if(!isPlayer1GameOver)
-			SetVisibleCenterMessage(centerMsg1,false);
-		else if(!isPlayer2GameOver)
-			SetVisibleCenterMessage(centerMsg2,false);
+		if (!isPlayer1GameOver)
+			SetVisibleCenterMessage(centerMsg1, false);
+		else if (!isPlayer2GameOver)
+			SetVisibleCenterMessage(centerMsg2, false);
 		break;
 	case SceneDev2::Status::GameOver:
 		FRAMEWORK.SetTimeScale(0.f);
@@ -215,8 +234,8 @@ void SceneDev2::SetStatus(Status newStatus)
 		FRAMEWORK.SetTimeScale(0.f);
 		SetVisibleCenterMessage(centerMsg1, true);
 		SetVisibleCenterMessage(centerMsg2, true);
-		SetCenterMessage(centerMsg1,"PAUSE! ESC TO RESUME!");
-		SetCenterMessage(centerMsg2,"PAUSE! ESC TO RESUME!");
+		SetCenterMessage(centerMsg1, "PAUSE! ESC TO RESUME!");
+		SetCenterMessage(centerMsg2, "PAUSE! ESC TO RESUME!");
 
 		SCENE_MGR.SetIsGaming(false);
 		break;
@@ -239,24 +258,26 @@ void SceneDev2::UpdateGame(float dt)
 		return;
 	}
 
-	timer1 = Utils::Clamp(timer1 - dt, 0.f, gameTime);
-	timer2 = Utils::Clamp(timer2 - dt, 0.f, gameTime);
+	timer1 = player1->GetLife();
+	timer2 = player2->GetLife();
 	uiTimer1->SetValue(timer1 / gameTime);
 	uiTimer2->SetValue(timer2 / gameTime);
-	if (timer1 <= 0.f && !isPlayer1GameOver)
-	{
-		sfxTimeOut.play();
 
-		OnDie(true, player1);
-		//return;
+	if (bee1->IsActive())
+	{
+		bee1->SetScale(bee1->GetScale() * (1.f + dt * 3.f));
+		if (bee1->GetScale().x > 30.f)
+		{
+			bee1->SetActive(false);
+		}
 	}
-
-	if (timer2 <= 0.f && !isPlayer2GameOver)
+	if (bee2->IsActive())
 	{
-		sfxTimeOut.play();
-
-		OnDie(true, player2);
-		//return;
+		bee2->SetScale(bee2->GetScale() * (1.f + dt * 3.f));
+		if (bee2->GetScale().x > 30.f)
+		{
+			bee2->SetActive(false);
+		}
 	}
 }
 
@@ -276,79 +297,19 @@ void SceneDev2::UpdatePause(float dt)
 	}
 }
 
-void SceneDev2::Player1Chopping(Sides side)
+void SceneDev2::OnChop(Sides side, Player* player)
 {
-	Sides branchSide = tree1->Chop(side);
-	BranchStatus branchStat = tree1->GetLastBranchStatus();
-	player1->Chopped(branchSide, branchStat);
-
-	if (player1->GetSide() == branchSide)
+	if (player == player1)
 	{
-		BranchStatus currentBranch = tree1->GetLastBranchStatus();
-		switch (tree1->GetLastBranchStatus())
-		{
-		case BranchStatus::Normal:
-			if (player1->GetGodMode() <= 0.f)
-			{
-				sfxDeath.play();
-				OnDie(false, player1);
-			}
-			else
-			{
-				timer1 += 0.5f;
-			}
-			break;
-		case BranchStatus::Apple:
-			FRAMEWORK.SetTimeScale(0.5f);
-			break;
-		case BranchStatus::GoldenApple:
-			player1->SetGodMode(2.f);
-			break;
-		case BranchStatus::BeeHive:
-			break;
-		}
+		Sides branchSide = tree1->Chop(side);
+		BranchStatus branchStat = tree1->GetLastBranchStatus();
+		player1->Chopped(branchSide, branchStat);
 	}
-	else
+	if (player == player2)
 	{
-		timer1 += 1.f;
-	}
-}
-
-void SceneDev2::Player2Chopping(Sides side)
-{
-	Sides branchSide = tree2->Chop(side);
-	BranchStatus branchStat = tree2->GetLastBranchStatus();
-	player2->Chopped(branchSide, branchStat);
-
-	if (player2->GetSide() == branchSide)
-	{
-		BranchStatus currentBranch = tree2->GetLastBranchStatus();
-		switch (tree2->GetLastBranchStatus())
-		{
-		case BranchStatus::Normal:
-			if (player2->GetGodMode() <= 0.f)
-			{
-				sfxDeath.play();
-				OnDie(false, player2);
-			}
-			else
-			{
-				timer2 += 0.5f;
-			}
-			break;
-		case BranchStatus::Apple:
-			FRAMEWORK.SetTimeScale(0.5f);
-			break;
-		case BranchStatus::GoldenApple:
-			player2->SetGodMode(2.f);
-			break;
-		case BranchStatus::BeeHive:
-			break;
-		}
-	}
-	else
-	{
-		timer2 += 1.f;
+		Sides branchSide = tree2->Chop(side);
+		BranchStatus branchStat = tree2->GetLastBranchStatus();
+		player2->Chopped(branchSide, branchStat);
 	}
 }
 
@@ -360,17 +321,18 @@ void SceneDev2::OnDie(bool isTimeOver, Player* player)
 		{
 			SetCenterMessage(centerMsg1, "           Time Over!\nPress Enter to MainTitle");
 			isPlayer1GameOver = true;
+			sfxTimeOut.play();
 		}
 		else if (player == player2)
 		{
 			SetCenterMessage(centerMsg2, "           Time Over!\nPress Enter to MainTitle");
 			isPlayer2GameOver = true;
+			sfxTimeOut.play();
 		}
 
 		if (isPlayer1GameOver && isPlayer2GameOver)
 		{
 			SetStatus(Status::GameOver);
-			sfxDeath.play();
 		}
 		return;
 	}
@@ -379,16 +341,67 @@ void SceneDev2::OnDie(bool isTimeOver, Player* player)
 	{
 		SetCenterMessage(centerMsg1, "           You Die!\nPress Enter to MainTitle");
 		isPlayer1GameOver = true;
+		sfxDeath.play();
 	}
 	else if (player == player2)
 	{
 		SetCenterMessage(centerMsg2, "           You Die!\nPress Enter to MainTitle");
 		isPlayer2GameOver = true;
+		sfxDeath.play();
 	}
 
 	if (isPlayer1GameOver && isPlayer2GameOver)
 	{
 		SetStatus(Status::GameOver);
-		sfxTimeOut.play();
 	}
+}
+
+void SceneDev2::OnBeehive(Sides side, Player* player)
+{
+	sf::Vector2f pos;
+	if (player == player1)
+	{
+		pos = tree1->GetPosition();
+		if (side == Sides::Left)
+		{
+			pos += {-290.f, -130.f};
+		}
+		else
+		{
+			pos += {290.f, -130.f};
+		}
+		bee1->SetPosition(pos);
+		bee1->SetScale({ 0.05f,0.05f });
+		bee1->SetActive(true);
+	}
+	if (player == player2)
+	{
+		pos = tree2->GetPosition();
+		if (side == Sides::Left)
+		{
+			pos += {-290.f, -130.f};
+		}
+		else
+		{
+			pos += {290.f, -130.f};
+		}
+		bee2->SetPosition(pos);
+		bee2->SetScale({ 0.05f,0.05f });
+		bee2->SetActive(true);
+	}
+
+	if (side == Sides::Left)
+	{
+		//pos += rightBranches.front()->GetOrigin();
+		pos += {-290.f, -130.f};
+	}
+	else
+	{
+		//pos -= rightBranches.front()->GetOrigin();
+		pos += {290.f, -130.f};
+	}
+	bee1->SetPosition(pos);
+	bee1->SetScale({ 0.05f,0.05f });
+	bee1->SetActive(true);
+	sfxBee.play();
 }

@@ -43,7 +43,7 @@ public:
 	void SetGameMode(const SceneIds& mode) { gameMode = mode; }
 	SceneIds GetGameMode() const { return gameMode; }
 
-	void SetIsGaming(const bool gaming) { isGaming = gaming; };
+	void SetIsGaming(const bool gaming) { isGaming = gaming; }
 	bool GetIsGaming() const { return isGaming; }
 };
 

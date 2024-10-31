@@ -155,12 +155,9 @@ void Player::Update(float dt)
 			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Left);
 		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
 		{
-			if (name == "Player1")
-				dynamic_cast<SceneDev2*>(sceneGame)->Player1Chopping(Sides::Left);
-			else if(name == "Player2")
-				dynamic_cast<SceneDev2*>(sceneGame)->Player2Chopping(Sides::Left);
+			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Left, this);
 		}
-			
+
 
 		sfxChop.play();
 	}
@@ -179,10 +176,7 @@ void Player::Update(float dt)
 			dynamic_cast<SceneDev1*>(sceneGame)->OnChop(Sides::Right);
 		else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
 		{
-			if (name == "Player1")
-				dynamic_cast<SceneDev2*>(sceneGame)->Player1Chopping(Sides::Left);
-			else if (name == "Player2")
-				dynamic_cast<SceneDev2*>(sceneGame)->Player2Chopping(Sides::Left);
+			dynamic_cast<SceneDev2*>(sceneGame)->OnChop(Sides::Left, this);
 		}
 
 		sfxChop.play();
