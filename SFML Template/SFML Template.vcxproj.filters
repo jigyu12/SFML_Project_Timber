@@ -81,7 +81,7 @@
     <ClCompile Include="SelectCharacter.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="PraticePage.cpp">
+    <ClCompile Include="Framework\ViewTest.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -161,7 +161,7 @@
     <ClInclude Include="SelectCharacter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="PraticePage.h">
+    <ClInclude Include="Framework\ViewTest.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

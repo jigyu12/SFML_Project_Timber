@@ -100,6 +100,8 @@ void Player::Init()
 
 	spriteFire.setTexture(TEXTURE_MGR.Get(texIdFire));
 	Utils::SetOrigin(spriteFire, Origins::BC);
+
+	sfxStar.setLoop(true);
 }
 
 void Player::Reset()
@@ -140,12 +142,16 @@ void Player::Update(float dt)
 	godMode = Utils::Clamp(godMode - dt, 0.f, 10.f);
 	if (godMode <= 0.f)
 	{
-		sfxStar.stop();
+		if (sfxStar.getStatus() == sf::SoundSource::Status::Playing)
+		{
+			sfxStar.stop();
+			timeScale = 1.f;
+		}
 	}
 
 	if (appleTimer <= 0.f)
 	{
-		SetApple(1.f);
+		timeScale = 1.f;
 	}
 	if (life <= 0.f)
 	{
@@ -236,7 +242,6 @@ void Player::Chopped(Sides side, BranchStatus branch)
 				isAlive = false;
 				if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 					dynamic_cast<SceneDev1*>(sceneGame)->OnDie(false);
-				//Ȳ�Կ� Todo - 2�÷��̾� ���� �߰��ؾ���
 				else if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2)
 					dynamic_cast<SceneDev2*>(sceneGame)->OnDie(false, this);
 			}
@@ -244,17 +249,17 @@ void Player::Chopped(Sides side, BranchStatus branch)
 			{
 				if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 					dynamic_cast<SceneDev1*>(sceneGame)->AddScore(50);
-				//Ȳ�Կ� Todo - 2�÷��̾� ���� �߰��ؾ���
 				AddLife(0.5f);
 			}
 			break;
 		case BranchStatus::Apple:
 			sfxEat.play();
-			SetApple(0.5f);
+			SetApple(0.7f);
 			break;
 		case BranchStatus::GoldenApple:
 			sfxStar.play();
-			SetGodMode(2.f);
+			SetGodMode(4.f);
+			timeScale = 2.f;
 			break;
 		case BranchStatus::BeeHive:
 			if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
@@ -268,9 +273,21 @@ void Player::Chopped(Sides side, BranchStatus branch)
 	{
 		if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1)
 			dynamic_cast<SceneDev1*>(sceneGame)->AddScore(100);
-		//Ȳ�Կ� Todo - 2�÷��̾� ���� �߰��ؾ���
 		AddLife(1.f);
 	}
+	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1 && isAlive)
+	{
+		ViewTest::Instance().RunShake(0, 1.f, 30.f, 0.20f);
+	}
+	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2 && isAlive && name == "Player1")
+	{
+		ViewTest::Instance().RunShake(0, 1.f, 30.f, 0.20f);
+	}
+	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2 && isAlive && name == "Player2")
+	{
+		ViewTest::Instance().RunShake(1, 1.f, 30.f, 0.20f);
+	}
+
 }
 
 void Player::SetGodMode(float godModeTime)

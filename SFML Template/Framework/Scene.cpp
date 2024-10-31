@@ -37,13 +37,14 @@ void Scene::Enter()
 
 void Scene::Exit()
 {
+	FRAMEWORK.DefaultView();
 	ApplyAddGo();
 	ApplyRemoveGO();
 }
 
 void Scene::Update(float dt)
 {
-
+	ViewTest::Instance().Update(dt);
 	for (auto obj : gameObjects)
 	{
 		if (!obj->IsActive())

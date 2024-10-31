@@ -73,6 +73,7 @@ public:
 	void SetGodMode(float time);
 	
 	float GetPlayerTimeScale() const { return timeScale; }
+	void SetPlayerTimeScale(float ts) { timeScale = ts; }
 	void SetApple(float timescale);
 
 	float GetLife() const { return life; }
