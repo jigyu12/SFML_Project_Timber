@@ -168,8 +168,9 @@ void SceneDev1::Update(float dt)
 
 void SceneDev1::Draw(sf::RenderWindow& window)
 {
+	sf::View* tmp = (ViewTest::Instance().GetView(0));
+	window.setView(*tmp);
 	Scene::Draw(window);
-	window.setView(*ViewTest::Instance().GetView(0));
 }
 
 void SceneDev1::SetCenterMessage(const std::string& msg)

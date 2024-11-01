@@ -78,8 +78,7 @@ void ViewTest::SetViewRect(SceneIds gamemode)
 		center[0] = { 1920.f * 0.5f,1080.f * 0.5f };
 		views[0]->setCenter({ 1920.f * 0.5f,1080.f * 0.5f });
 		views[0]->setSize({ 1920.f,1080.f });
-		views[1]->setCenter({ 0.f,0.f });
-		views[1]->setSize({ 0.f,0.f });
+		views[0]->setViewport({ 0.f,0.0f,1.f,1.f });
 	}
 	if (gameMode == SceneIds::Dev2)
 	{
