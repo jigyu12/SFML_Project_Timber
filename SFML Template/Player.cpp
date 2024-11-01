@@ -277,15 +277,15 @@ void Player::Chopped(Sides side, BranchStatus branch)
 	}
 	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev1 && isAlive)
 	{
-		ViewTest::Instance().RunShake(0, 1.f, 30.f, 0.20f);
+		ViewTest::Instance().RunShake(0, 1.f, 10.f, 0.20f);
 	}
 	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2 && isAlive && name == "Player1")
 	{
-		ViewTest::Instance().RunShake(0, 1.f, 30.f, 0.20f);
+		ViewTest::Instance().RunShake(0, 1.f, 10.f, 0.20f);
 	}
 	if (SCENE_MGR.GetCurrentSceneId() == SceneIds::Dev2 && isAlive && name == "Player2")
 	{
-		ViewTest::Instance().RunShake(1, 1.f, 30.f, 0.20f);
+		ViewTest::Instance().RunShake(1, 1.f, 10.f, 0.20f);
 	}
 
 }
