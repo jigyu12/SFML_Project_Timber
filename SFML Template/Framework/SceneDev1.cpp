@@ -44,7 +44,7 @@ void SceneDev1::Init()
 
 	tree = AddGo(new Tree("Tree"));
 
-	player = AddGo(new Player(PlayerSelect::Player1, "Player1"));
+	player = AddGo(new Player(PlayerSelect::Player1, "Player2"));
 
 	centerMsg = AddGo(new TextGo("fonts/KOMIKAP_.ttf", "Center Message"));
 	centerMsg->sortingLayer = SortingLayers::UI;
