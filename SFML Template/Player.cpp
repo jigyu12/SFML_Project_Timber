@@ -118,6 +118,10 @@ void Player::Reset()
 	isAlive = true;
 	isChppoing = false;
 	life = 5.f;
+
+	appleTimer = 0.f;
+	godMode = 0.f;
+
 	SetPosition(position);
 	SetScale({ 1.f, 1.f });
 	SetSide(Sides::Right);
@@ -147,12 +151,12 @@ void Player::Update(float dt)
 			sfxStar.stop();
 			timeScale = 1.f;
 		}
+		if (appleTimer <= 0.f)
+		{
+			timeScale = 1.f;
+		}
 	}
 
-	if (appleTimer <= 0.f)
-	{
-		timeScale = 1.f;
-	}
 	if (life <= 0.f)
 	{
 		isAlive = false;
@@ -253,12 +257,16 @@ void Player::Chopped(Sides side, BranchStatus branch)
 			}
 			break;
 		case BranchStatus::Apple:
-			sfxEat.play();
-			SetApple(0.7f);
+			if (godMode <= 0.f)
+			{
+				sfxEat.play();
+				SetApple(0.7f);
+			}
 			break;
 		case BranchStatus::GoldenApple:
 			sfxStar.play();
-			SetGodMode(4.f);
+			AddGodMode(4.f);
+			appleTimer = 0.f;
 			timeScale = 2.f;
 			break;
 		case BranchStatus::BeeHive:
@@ -290,7 +298,7 @@ void Player::Chopped(Sides side, BranchStatus branch)
 
 }
 
-void Player::SetGodMode(float godModeTime)
+void Player::AddGodMode(float godModeTime)
 {
 	godMode = Utils::Clamp(godMode + godModeTime, 0.f, 10.f);
 	if (side == Sides::Left)

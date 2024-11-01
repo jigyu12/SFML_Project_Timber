@@ -70,7 +70,7 @@ public:
 	void Chopped(Sides side, BranchStatus branch);
 
 	float GetGodMode() const { return godMode; }
-	void SetGodMode(float time);
+	void AddGodMode(float time);
 	
 	float GetPlayerTimeScale() const { return timeScale; }
 	void SetPlayerTimeScale(float ts) { timeScale = ts; }
